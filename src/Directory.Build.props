@@ -1,0 +1,41 @@
+<!--
+   Copyright 2024 Alexander Stärk
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<Project>
+	<!-- general build properties -->
+	<PropertyGroup>
+		<UseArtifactsOutput>true</UseArtifactsOutput>
+		<LangVersion>12.0</LangVersion>
+	</PropertyGroup>
+	
+	<!-- NuGet package properties and project info -->
+	<PropertyGroup>
+		<BAS_CB_Copyright_BeginYear>2024</BAS_CB_Copyright_BeginYear>
+		<PackageProjectUrl>https://github.com/basilisque-framework/AutoImplementer</PackageProjectUrl>
+		<PackageTags>auto-implementation auto implementation implement implementer interface source-generator CSharp</PackageTags>
+		<!--<PackageIconUrl>http://www.url.de/nuget_icon.png</PackageIconUrl>-->
+		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<!-- Pack the build props/targets in the build directory -->
+		<None Include="$(SolutionDir)\$(AssemblyName).props" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).props')" />
+		<None Include="$(SolutionDir)\$(AssemblyName).targets" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).targets')" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Tests')) == true OR $(MSBuildProjectName.Contains('.TestAssembly')) == true">
+		<ProjectReference Include="..\AutoImplementer.CodeAnalysis\AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+</Project>
