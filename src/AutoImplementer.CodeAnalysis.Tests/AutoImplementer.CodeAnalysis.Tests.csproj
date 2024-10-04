@@ -18,10 +18,13 @@
 		<IsPackable>false</IsPackable>
 		<IsPublishable>false</IsPublishable>
 		<TargetFrameworks>net48;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
 		<CompilerVisibleProperty Include="LangVersion" />
 		
 		<PackageReference Include="Basilisque.CodeAnalysis.TestSupport.MSTest" />
+
+        <ProjectReference Include="../AutoImplementer.CodeAnalysis/AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>
