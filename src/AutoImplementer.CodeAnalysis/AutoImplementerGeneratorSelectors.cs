@@ -59,8 +59,8 @@ internal static class AutoImplementerGeneratorSelectors
 
             var hasAttribute = namedTypeSymbol.GetAttributes()
                 .Select(attribute => attribute.AttributeClass)
-                .Any(attributeClass => attributeClass?.Name == AutoImplementerGeneratorOutput.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME &&
-                                       attributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorOutput.C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE);
+                .Any(attributeClass => attributeClass?.Name == AutoImplementerGeneratorData.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME &&
+                                       attributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE);
 
             if (!hasAttribute)
                 continue;
