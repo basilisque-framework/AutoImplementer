@@ -197,7 +197,7 @@ public sealed class " + C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME + @" : A
             return;
 
         // check if the property is nullable
-        if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
+        if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated && !fqtn.EndsWith("?"))
             fqtn += "?";
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
