@@ -15,6 +15,7 @@
 */
 
 using Basilisque.CodeAnalysis.Syntax;
+using System.Diagnostics;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
 

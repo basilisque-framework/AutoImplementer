@@ -34,6 +34,16 @@ internal static class AutoImplementerGeneratorOutput
             AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME, 
             AutoImplementerGeneratorData.AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_SOURCE
         );
+
+        context.AddSource(
+            AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_COMPILATIONNAME,
+            AutoImplementerGeneratorData.IMPLEMENT_AS_REQUIRED_ATTRIBUTE_SOURCE
+        );
+
+        context.AddSource(
+            AutoImplementerGeneratorData.C_REQUIRED_DOTNET_6_PATCH_COMPILATIONNAME,
+            AutoImplementerGeneratorData.REQUIRED_DOTNET_6_PATCH_SOURCE
+        );
     }
 
     internal static void OutputImplementations(SourceProductionContext context, (ClassDeclarationSyntax ClassToGenerate, SemanticModel SemanticModel, List<INamedTypeSymbol> Interfaces) generationInfo, RegistrationOptions registrationOptions)
@@ -132,6 +142,9 @@ internal static class AutoImplementerGeneratorOutput
         // check if the property is nullable
         if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
             fqtn += "?";
+
+        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME) )
+            fqtn = "required " + fqtn;
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
 
