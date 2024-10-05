@@ -15,25 +15,24 @@
 */
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
+using System.Threading;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
 
 internal static class AutoImplementerGeneratorSelectors
 {
-    private static (ClassDeclarationSyntax? Node, List<INamedTypeSymbol>? Interfaces) C_EMPTY_NODE_INFO = (null, null);
+    private static readonly (ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) C_EMPTY_NODE_INFO = (null, null, ImmutableArray<INamedTypeSymbol>.Empty)!;
 
-    internal static IncrementalValuesProvider<(ClassDeclarationSyntax Node, SemanticModel SemanticModel, List<INamedTypeSymbol> Interfaces)> GetClassesToGenerate(IncrementalGeneratorInitializationContext context)
+    internal static IncrementalValuesProvider<(ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces)> GetClassesToGenerate(IncrementalGeneratorInitializationContext context)
     {
         var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider(
             predicate: static (s, _) => isClassWithBaseTypes(s),
-            transform: static (ctx, _) =>
-            {
-                var (node, interfaces) = getSemanticTargetAndInterfaces(ctx);
-                return (Node: node, ctx.SemanticModel, Interfaces: interfaces);
-            })
+            transform: getSemanticTargetAndInterfaces
+            )
         .Where(static m => m.Node is not null);
 
-        return classDeclarations!;
+        return classDeclarations;
     }
 
     private static bool isClassWithBaseTypes(Microsoft.CodeAnalysis.SyntaxNode node)
@@ -42,35 +41,33 @@ internal static class AutoImplementerGeneratorSelectors
         return node is ClassDeclarationSyntax classDeclaration && classDeclaration.BaseList?.Types.Any() == true;
     }
 
-    private static (ClassDeclarationSyntax? Node, List<INamedTypeSymbol>? Interfaces) getSemanticTargetAndInterfaces(GeneratorSyntaxContext context)
+    private static (ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) getSemanticTargetAndInterfaces(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         var classDeclaration = (ClassDeclarationSyntax)context.Node;
 
-        if (classDeclaration.BaseList is null)
-            return C_EMPTY_NODE_INFO;
+        var interfacesBuilder = ImmutableArray.CreateBuilder<INamedTypeSymbol>();
 
-        var interfaces = new List<INamedTypeSymbol>();
-
-        foreach (var baseType in classDeclaration.BaseList.Types)
+        foreach (var baseType in classDeclaration.BaseList!.Types)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var typeSymbol = context.SemanticModel.GetTypeInfo(baseType.Type).Type;
             if (typeSymbol is not INamedTypeSymbol namedTypeSymbol)
                 continue;
 
             var hasAttribute = namedTypeSymbol.GetAttributes()
-                .Select(attribute => attribute.AttributeClass)
-                .Any(attributeClass => attributeClass?.Name == AutoImplementerGeneratorOutput.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME &&
-                                       attributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorOutput.C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE);
+                .Any(attribute => attribute.AttributeClass?.Name == AutoImplementerGeneratorOutput.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME &&
+                                  attribute.AttributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorOutput.C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE);
 
             if (!hasAttribute)
                 continue;
 
-            interfaces.Add(namedTypeSymbol);
+            interfacesBuilder.Add(namedTypeSymbol);
         }
 
-        if (!interfaces.Any())
+        if (interfacesBuilder.Count == 0)
             return C_EMPTY_NODE_INFO;
 
-        return (classDeclaration, interfaces);
+        return (classDeclaration, context.SemanticModel, interfacesBuilder.ToImmutable());
     }
 }
