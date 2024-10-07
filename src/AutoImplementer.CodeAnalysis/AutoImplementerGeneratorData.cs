@@ -21,7 +21,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis;
 internal static class AutoImplementerGeneratorData
 {
 
-    internal const string C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE = "Basilisque.AutoImplementer";
+    internal const string C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE = "Basilisque.AutoImplementer.Annotations";
     internal const string C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME = "AutoImplementInterfaceAttribute";
     internal const string C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME = "AutoImplementAttribute";
     internal const string C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME = "IRequiredAttribute";
@@ -49,51 +49,54 @@ using System;
 ";
 
     internal static readonly string GENERATED_CLASS_SHARED_ATTRIBUTES = $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{ASSEMBLY_NAME.Name}"", ""{ASSEMBLY_NAME.Version}"")]
-[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
 
     internal static readonly string AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_SOURCE =
     @$"{GENERATED_FILE_SHARED_HEADER}
-namespace {C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE};
-
-/// <summary>
-/// Marks an interface with all members for automatic implementation
-/// </summary>
-{GENERATED_CLASS_SHARED_ATTRIBUTES}
-[AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
-internal sealed class {C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME} : Attribute
-{@"{
-}"}
-";
+namespace {C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE}
+{{
+    /// <summary>
+    /// Marks an interface with all members for automatic implementation
+    /// </summary>
+    {GENERATED_CLASS_SHARED_ATTRIBUTES}
+    [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
+    internal sealed class {C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME} : Attribute
+    {{
+    }}
+}}";
 
     internal static readonly string AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_SOURCE =
     @$"{GENERATED_FILE_SHARED_HEADER}
-namespace {C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE};
-
-/// <summary>
-/// Marks a member of an interface for automatic implementation
-/// </summary>
-{GENERATED_CLASS_SHARED_ATTRIBUTES}
-[AttributeUsage(AttributeTargets.Property /*| AttributeTargets.Method | AttributeTargets.Event*/, AllowMultiple = false, Inherited = false)]
-internal sealed class {C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME} : Attribute
-{@"{
+namespace {C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE}
+{{
     /// <summary>
-    /// Determines if the member should be automatically implemented or not
+    /// Marks a member of an interface for automatic implementation
     /// </summary>
-    public bool Implement { get; set; } = true;
-}"}";
-
+    {GENERATED_CLASS_SHARED_ATTRIBUTES}
+    [AttributeUsage(AttributeTargets.Property /*| AttributeTargets.Method | AttributeTargets.Event*/, AllowMultiple = false, Inherited = false)]
+    internal sealed class {C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME} : Attribute
+    {{
+        /// <summary>
+        /// Determines if the member should be automatically implemented or not
+        /// </summary>
+        public bool Implement {{ get; set; }} = true;
+    }}
+}}";
 
     internal static readonly string IMPLEMENT_AS_REQUIRED_ATTRIBUTE_SOURCE =
     @$"{GENERATED_FILE_SHARED_HEADER}
-/// <summary>
-/// Adds the ""required"" keyword to the generated property
-/// </summary>
-{GENERATED_CLASS_SHARED_ATTRIBUTES}
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-internal sealed class {C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME} : Attribute
-{@"{
-}"}";
+namespace {C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE}
+{{
+    /// <summary>
+    /// Adds the ""required"" keyword to the generated property
+    /// </summary>
+    {GENERATED_CLASS_SHARED_ATTRIBUTES}
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    internal sealed class {C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME} : Attribute
+    {{
+    }}
+}}";
 
     internal static readonly string REQUIRED_DOTNET_6_PATCH_SOURCE =
     $@"{GENERATED_FILE_SHARED_HEADER}

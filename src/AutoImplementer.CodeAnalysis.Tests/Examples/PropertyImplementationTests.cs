@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using Basilisque.AutoImplementer.Annotations;
+
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests;
 
 /* Define the interfaces that should be automatically implemented */
