@@ -16,7 +16,6 @@
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests;
 
-
 /* Define the interfaces that should be automatically implemented */
 
 [AutoImplementInterface()]
@@ -29,13 +28,20 @@ public interface ITitle
 public interface IDetails
 {
     byte[]? Image { get; set; }
-    string Summary { get; set; }
+    string? Summary { get; set; }
+}
+
+[AutoImplementInterface()]
+public interface IBookDetails
+{
+    int? NoOfPages { get; set; }
+    Nullable<bool> IsRead { get; set; }
 }
 
 
 /* Define some example classes that implement the interfaces */
 
-public partial class Book : ITitle, IDetails
+public partial class Book : ITitle, IDetails, IBookDetails
 { /* will have the properties Title, Image and Summary */ }
 
 public partial class Movie : ITitle, IDetails
