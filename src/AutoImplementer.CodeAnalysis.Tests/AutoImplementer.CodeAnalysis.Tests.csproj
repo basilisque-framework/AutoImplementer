@@ -1,4 +1,4 @@
-﻿<!--
+<!--
    Copyright 2024 Alexander Stärk
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,14 @@
    limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<IsPackable>false</IsPackable>
-		<IsPublishable>false</IsPublishable>
-		<TargetFrameworks>net48;net8.0</TargetFrameworks>
-	</PropertyGroup>
-	<ItemGroup>
-		<CompilerVisibleProperty Include="LangVersion" />
-		
-		<PackageReference Include="Basilisque.CodeAnalysis.TestSupport.MSTest" />
-	</ItemGroup>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <CompilerVisibleProperty Include="LangVersion" />
+
+    <PackageReference Include="Basilisque.CodeAnalysis.TestSupport.MSTest" />
+  </ItemGroup>
 </Project>

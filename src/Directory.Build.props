@@ -14,28 +14,28 @@
    limitations under the License.
 -->
 <Project>
-	<!-- general build properties -->
-	<PropertyGroup>
-		<UseArtifactsOutput>true</UseArtifactsOutput>
-		<LangVersion>12.0</LangVersion>
-	</PropertyGroup>
-	
-	<!-- NuGet package properties and project info -->
-	<PropertyGroup>
-		<BAS_CB_Copyright_BeginYear>2024</BAS_CB_Copyright_BeginYear>
-		<PackageProjectUrl>https://github.com/basilisque-framework/AutoImplementer</PackageProjectUrl>
-		<PackageTags>auto-implementation auto implementation implement implementer interface source-generator CSharp</PackageTags>
-		<!--<PackageIconUrl>http://www.url.de/nuget_icon.png</PackageIconUrl>-->
-		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
-	</PropertyGroup>
-	
-	<ItemGroup>
-		<!-- Pack the build props/targets in the build directory -->
-		<None Include="$(SolutionDir)\$(AssemblyName).props" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).props')" />
-		<None Include="$(SolutionDir)\$(AssemblyName).targets" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).targets')" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Tests')) == true OR $(MSBuildProjectName.Contains('.TestAssembly')) == true">
-		<ProjectReference Include="..\AutoImplementer.CodeAnalysis\AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-	</ItemGroup>
+  <!-- general build properties -->
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <LangVersion>12.0</LangVersion>
+  </PropertyGroup>
+  
+  <!-- NuGet package properties and project info -->
+  <PropertyGroup>
+    <BAS_CB_Copyright_BeginYear>2024</BAS_CB_Copyright_BeginYear>
+    <PackageProjectUrl>https://github.com/basilisque-framework/AutoImplementer</PackageProjectUrl>
+    <PackageTags>auto-implementation auto implementation implement implementer interface source-generator CSharp</PackageTags>
+    <!--<PackageIconUrl>http://www.url.de/nuget_icon.png</PackageIconUrl>-->
+    <PackageReadmeFile>docs\README.md</PackageReadmeFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Pack the build props/targets in the build directory -->
+    <None Include="$(SolutionDir)\$(AssemblyName).props" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).props')" />
+    <None Include="$(SolutionDir)\$(AssemblyName).targets" Pack="true" PackagePath="build" Condition="Exists('$(SolutionDir)\$(AssemblyName).targets')" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Tests')) == true OR $(MSBuildProjectName.Contains('.TestAssembly')) == true">
+    <ProjectReference Include="..\AutoImplementer.CodeAnalysis\AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
 </Project>
