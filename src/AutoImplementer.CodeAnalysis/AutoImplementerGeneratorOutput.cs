@@ -15,10 +15,8 @@
 */
 
 using Basilisque.CodeAnalysis.Syntax;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
-using System.Reflection;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
 
@@ -28,13 +26,23 @@ internal static class AutoImplementerGeneratorOutput
     internal static void OutputAttributes(IncrementalGeneratorPostInitializationContext context)
     {
         context.AddSource(
-            AutoImplementerGeneratorData.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_COMPILATIONNAME, 
+            AutoImplementerGeneratorData.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_COMPILATIONNAME,
             AutoImplementerGeneratorData.AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_SOURCE
         );
 
         context.AddSource(
-            AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME, 
+            AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME,
             AutoImplementerGeneratorData.AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_SOURCE
+        );
+
+        context.AddSource(
+            AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_COMPILATIONNAME,
+            AutoImplementerGeneratorData.IMPLEMENT_AS_REQUIRED_ATTRIBUTE_SOURCE
+        );
+
+        context.AddSource(
+            AutoImplementerGeneratorData.C_REQUIRED_DOTNET_6_PATCH_COMPILATIONNAME,
+            AutoImplementerGeneratorData.REQUIRED_DOTNET_6_PATCH_SOURCE
         );
     }
 
@@ -138,6 +146,9 @@ internal static class AutoImplementerGeneratorOutput
             if (!fqtn.EndsWith("?") && !fqtn.StartsWith("global::System.Nullable<"))
                 fqtn += "?";
         }
+
+        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME))
+            fqtn = "required " + fqtn;
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
 

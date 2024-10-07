@@ -41,7 +41,7 @@ Create the interfaces:
 [AutoImplementInterface()]
 public interface ITitle
 {
-  string Title { get; set; }
+  [IRequired] string Title { get; set; } // implements 'Title' as 'required' in .NET 7.0+
 }
 
 [AutoImplementInterface()]
