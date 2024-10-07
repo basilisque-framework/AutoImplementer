@@ -54,7 +54,7 @@ namespace " + C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE + @";
 [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
-public sealed class " + C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME + @" : Attribute
+internal sealed class " + C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME + @" : Attribute
 {
 }";
 
@@ -81,7 +81,7 @@ namespace " + C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE + @";
 [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 [AttributeUsage(AttributeTargets.Property /*| AttributeTargets.Method | AttributeTargets.Event*/, AllowMultiple = false, Inherited = false)]
-public sealed class " + C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME + @" : Attribute
+internal sealed class " + C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME + @" : Attribute
 {
     /// <summary>
     /// Determines if the member should be automatically implemented or not
