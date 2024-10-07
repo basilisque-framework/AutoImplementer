@@ -152,6 +152,7 @@ internal static class AutoImplementerGeneratorOutput
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
 
+        pi.InheritXmlDoc = true;
         pi.AccessModifier = mapAccessibility(propertySymbol.DeclaredAccessibility);
 
         classInfo.Properties.Add(pi);
