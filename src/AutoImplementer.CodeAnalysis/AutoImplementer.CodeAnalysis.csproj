@@ -20,15 +20,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Basilisque.CodeAnalysis" PrivateAssets="all" GeneratePathProperty="true" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="Basilisque.CodeAnalysis" PrivateAssets="all" GeneratePathProperty="true" />
 	</ItemGroup>
 	
 	<ItemGroup>

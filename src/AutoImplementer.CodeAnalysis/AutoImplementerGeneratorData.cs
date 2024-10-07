@@ -27,10 +27,10 @@ internal const string C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME      = "Aut
 internal const string C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME     = "AutoImplementAttribute";
 internal const string C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME         = "IRequiredAttribute";
 
-internal const string C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_COMPILATIONNAME = C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME;
-internal const string C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME  = C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME;
-internal const string C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_COMPILATIONNAME    = C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME;
-internal const string C_REQUIRED_DOTNET_6_PATCH_COMPILATIONNAME            = "RequiredDotNet6Patch";
+internal const string C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_COMPILATIONNAME = $"{C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME}.g";
+internal const string C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME  = $"{C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME}.g";
+internal const string C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_COMPILATIONNAME    = $"{C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME}.g";
+internal const string C_REQUIRED_DOTNET_6_PATCH_COMPILATIONNAME            = "Patch for required attribute in .NET 6 and below";
 
     internal static readonly AssemblyName ASSEMBLY_NAME = Assembly.GetExecutingAssembly().GetName();
 
@@ -66,7 +66,7 @@ internal static readonly string AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_SOURCE =
 /// </summary>
 {GENERATED_CLASS_SHARED_ATTRIBUTES}
 [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
-public sealed class {C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME} : Attribute
+internal sealed class {C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME} : Attribute
 {@"{
 }"}
 ";
@@ -79,7 +79,7 @@ internal static readonly string AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_SOURCE =
 /// </summary>
 {GENERATED_CLASS_SHARED_ATTRIBUTES}
 [AttributeUsage(AttributeTargets.Property /*| AttributeTargets.Method | AttributeTargets.Event*/, AllowMultiple = false, Inherited = false)]
-public sealed class {C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME} : Attribute
+internal sealed class {C_AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_CLASSNAME} : Attribute
 {@"{
     /// <summary>
     /// Determines if the member should be automatically implemented or not
@@ -96,7 +96,7 @@ internal static readonly string IMPLEMENT_AS_REQUIRED_ATTRIBUTE_SOURCE =
 /// </summary>
 {GENERATED_CLASS_SHARED_ATTRIBUTES}
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-public sealed class {C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME} : Attribute
+internal sealed class {C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME} : Attribute
 {@"{
 }"}";
 
@@ -106,8 +106,8 @@ $@"
 {@"
 #if !NET7_0_OR_GREATER
 namespace System.Runtime.CompilerServices {
-    public class RequiredMemberAttribute : Attribute { }
-    public class CompilerFeatureRequiredAttribute : Attribute
+    internal class RequiredMemberAttribute : Attribute { }
+    internal class CompilerFeatureRequiredAttribute : Attribute
     {
         public CompilerFeatureRequiredAttribute(string name) { }
     }
@@ -116,7 +116,7 @@ namespace System.Runtime.CompilerServices {
 namespace System.Diagnostics.CodeAnalysis {
 
     [System.AttributeUsage(System.AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
-    public sealed class SetsRequiredMembersAttribute : Attribute { }
+    internal sealed class SetsRequiredMembersAttribute : Attribute { }
 
 }
 #endif
