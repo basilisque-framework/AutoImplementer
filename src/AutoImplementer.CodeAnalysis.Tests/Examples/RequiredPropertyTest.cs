@@ -25,7 +25,7 @@ public interface IRequiredPropertiesExample
 {
     string? NullableString { get; set; }
 
-    [IRequired] string RequiredString { get; set; }
+    [Required] string RequiredString { get; set; }
 }
 
 public partial class RequiredPropertiesImpl : IRequiredPropertiesExample

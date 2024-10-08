@@ -46,7 +46,7 @@ public interface IMyInterface
     /// <summary>
     /// int required
     /// </summary>
-    [IRequired] int IntRequired { get; set; }
+    [Required] int IntRequired { get; set; }
 
     /// <summary>
     /// string not required
@@ -56,7 +56,7 @@ public interface IMyInterface
     /// <summary>
     /// string required
     /// </summary>
-    [IRequired] string StringRequired { get; set; }
+    [Required] string StringRequired { get; set; }
 }
 ");
 
