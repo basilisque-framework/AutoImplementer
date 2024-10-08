@@ -25,4 +25,9 @@ public class NoAutoImplementations_StillGeneratesStaticOutput : BaseAutoImplemen
     {
         // not adding any sources should still output all attributes
     }
+
+    protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
+    {
+        yield break;
+    }
 }

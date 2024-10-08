@@ -26,7 +26,7 @@ public static class PolyfillsGeneratorData
     private const string CodeAnalysisSetsRequiredMembersAttributeCompilationName = "Polyfill_System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute.g.cs";
     private const string CompilerServicesIsExternalInitCompilationName = "Polyfill_System.Runtime.CompilerServices.IsExternalInit.g.cs";
 
-    private static readonly string _compilerServicesRequiredMemberAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
+    private static readonly string _compilerServicesRequiredMemberAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 #if !NET7_0_OR_GREATER
 
 namespace System.Runtime.CompilerServices
@@ -37,7 +37,7 @@ namespace System.Runtime.CompilerServices
 
 #endif";
 
-    private static readonly string _compilerServicesCompilerFeatureRequiredAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
+    private static readonly string _compilerServicesCompilerFeatureRequiredAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 #if !NET7_0_OR_GREATER
 
 namespace System.Runtime.CompilerServices
@@ -62,7 +62,7 @@ namespace System.Runtime.CompilerServices
 
 #endif";
 
-    private static readonly string _codeAnalysisSetsRequiredMembersAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
+    private static readonly string _codeAnalysisSetsRequiredMembersAttributeSource = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 #if !NET7_0_OR_GREATER
 
 namespace System.Diagnostics.CodeAnalysis
@@ -73,7 +73,7 @@ namespace System.Diagnostics.CodeAnalysis
 
 #endif";
 
-    private static readonly string _compilerServicesIsExternalInitSource = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
+    private static readonly string _compilerServicesIsExternalInitSource = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 #if !NET5_0_OR_GREATER
 
 using System.ComponentModel;

@@ -35,11 +35,14 @@ public static class AutoImplementerGeneratorData
     private const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementOnMembersAttributeFullName}.g";
     private const string ImplementAsRequiredAttributeCompilationName = $"{ImplementAsRequiredAttributeFullName}.g";
 
-    private static readonly string _generatedFileSharedHeader = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
+    private static readonly string _generatedFileSharedHeader = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 
 using System;";
 
-    private static readonly string _generatedClassSharedAttributes = $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{CommonGeneratorData.AssemblyName.Name}"", ""{CommonGeneratorData.AssemblyName.Version}"")]
+    /// <summary>
+    /// Provides the attributes that are output for each class as a string
+    /// </summary>
+    public static readonly string GeneratedClassSharedAttributes = $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{CommonGeneratorData.AssemblyName.Name}"", ""{CommonGeneratorData.AssemblyName.Version}"")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
 
@@ -50,7 +53,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     /// <summary>
     /// Marks an interface with all members for automatic implementation
     /// </summary>
-    {_generatedClassSharedAttributes}
+    {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     internal sealed class {AutoImplementInterfaceAttributeClassName} : Attribute
     {{
@@ -64,7 +67,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     /// <summary>
     /// Marks a member of an interface for automatic implementation
     /// </summary>
-    {_generatedClassSharedAttributes}
+    {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Property /*| AttributeTargets.Method | AttributeTargets.Event*/, AllowMultiple = false, Inherited = false)]
     internal sealed class {AutoImplementOnMembersAttributeClassName} : Attribute
     {{
@@ -82,7 +85,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     /// <summary>
     /// Adds the ""required"" keyword to the generated property
     /// </summary>
-    {_generatedClassSharedAttributes}
+    {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     internal sealed class {ImplementAsRequiredAttributeClassName} : Attribute
     {{

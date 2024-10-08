@@ -44,5 +44,10 @@ namespace System.Runtime.CompilerServices
             yield return polyfill.Value;
         }
     }
+
+    protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
+    {
+        yield break;
+    }
 }
 

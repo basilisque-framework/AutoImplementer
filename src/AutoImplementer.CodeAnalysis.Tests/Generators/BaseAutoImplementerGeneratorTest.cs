@@ -24,12 +24,19 @@ using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
 
-public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<AutoImplementerGenerator>
+public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<AutoImplementerGenerator>>
 { }
 
-public abstract class BaseAutoImplementerGeneratorTest<TGenerator>
+public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<AutoImplementerGenerator, TVerifier>
+    where TVerifier : IncrementalSourceGeneratorVerifier<AutoImplementerGenerator>, new()
+{ }
+
+public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
     where TGenerator : Microsoft.CodeAnalysis.IIncrementalGenerator, new()
+    where TVerifier : IncrementalSourceGeneratorVerifier<TGenerator>, new()
 {
+    public virtual Microsoft.CodeAnalysis.CSharp.LanguageVersion? LanguageVersion { get { return null; } }
+
     [TestMethod]
     public virtual async Task Test()
     {
@@ -49,7 +56,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator>
         await verifier.RunAsync();
     }
 
-    protected virtual IncrementalSourceGeneratorVerifier<TGenerator> GetVerifier()
+    protected virtual TVerifier GetVerifier()
     {
         //define reference assemblies
 #if NET462 || NET48
@@ -94,7 +101,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator>
 #endif
 
         //create verifier
-        var verifier = new IncrementalSourceGeneratorVerifier<TGenerator>()
+        var verifier = new TVerifier()
         {
             ReferenceAssemblies = refAssemblies
             //TestState =
@@ -102,6 +109,9 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator>
             //    //AnalyzerConfigFiles = { }
             //}
         };
+
+        if (LanguageVersion.HasValue)
+            verifier.LanguageVersion = LanguageVersion.Value;
 
         //set the diagnostic options
         foreach (var diagOp in GetDiagnosticOptions())
@@ -148,10 +158,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator>
         return supportedPolyfills.Values;
     }
 
-    protected virtual IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
-    {
-        yield break;
-    }
+    protected abstract IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations();
 
     private List<(string Name, string SourceText)> getExpectedSources()
     {

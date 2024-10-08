@@ -42,6 +42,7 @@ internal static class AutoImplementerGeneratorOutput
         var compilationName = namespaceName is null ? $"{className}.auto_impl" : $"{namespaceName}.{className}.auto_impl";
 
         var ci = registrationOptions.CreateCompilationInfo(compilationName, namespaceName);
+        ci.EnableNullableContext = true;
 
         ci.AddNewClassInfo(className, classDeclaration.GetAccessModifier(), cl =>
         {
