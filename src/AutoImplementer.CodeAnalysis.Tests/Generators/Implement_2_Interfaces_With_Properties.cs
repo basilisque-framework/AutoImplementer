@@ -105,8 +105,8 @@ namespace AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties
     {
         // Expect warning "Non-nullable property 'Title' must contain a non-null value when exiting constructor. Consider declaring the property as nullable."
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(@"Basilisque.AutoImplementer.CodeAnalysis\Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator\AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs", 21, 23, 21, 28)
-            .WithSpan(@"Basilisque.AutoImplementer.CodeAnalysis\Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator\AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs", 21, 23, 21, 28);
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 23, 21, 28)
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 23, 21, 28);
     }
 }
 
