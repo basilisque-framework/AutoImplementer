@@ -32,6 +32,6 @@
     <None Include="build/**" Pack="true" PackagePath="build" />
 
     <!-- Pack README -->
-    <None Include="..\..\README.md" Pack="true" PackagePath="docs"/>
+    <None Include="..\..\README.md" Pack="true" PackagePath="docs" />
   </ItemGroup>
 </Project>

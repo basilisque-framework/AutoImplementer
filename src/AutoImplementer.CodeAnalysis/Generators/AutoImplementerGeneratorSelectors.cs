@@ -18,11 +18,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Threading;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
 internal static class AutoImplementerGeneratorSelectors
 {
-    private static readonly (ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) C_EMPTY_NODE_INFO = (null, null, ImmutableArray<INamedTypeSymbol>.Empty)!;
+    private static readonly (ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) _emptyNodeInfo = (null, null, ImmutableArray<INamedTypeSymbol>.Empty)!;
 
     internal static IncrementalValuesProvider<(ClassDeclarationSyntax Node, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces)> GetClassesToGenerate(IncrementalGeneratorInitializationContext context)
     {
@@ -56,8 +56,8 @@ internal static class AutoImplementerGeneratorSelectors
                 continue;
 
             var hasAttribute = namedTypeSymbol.GetAttributes()
-                .Any(attribute => attribute.AttributeClass?.Name == AutoImplementerGeneratorData.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_CLASSNAME &&
-                                  attribute.AttributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_TARGET_NAMESPACE);
+                .Any(attribute => attribute.AttributeClass?.Name == AutoImplementerGeneratorData.AutoImplementInterfaceAttributeClassName &&
+                                  attribute.AttributeClass.ContainingNamespace.ToDisplayString() == AutoImplementerGeneratorData.AutoImplementedAttributesTargetNamespace);
 
             if (!hasAttribute)
                 continue;
@@ -66,7 +66,7 @@ internal static class AutoImplementerGeneratorSelectors
         }
 
         if (interfacesBuilder.Count == 0)
-            return C_EMPTY_NODE_INFO;
+            return _emptyNodeInfo;
 
         return (classDeclaration, context.SemanticModel, interfacesBuilder.ToImmutable());
     }

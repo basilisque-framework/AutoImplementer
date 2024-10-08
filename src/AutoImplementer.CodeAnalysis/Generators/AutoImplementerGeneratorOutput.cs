@@ -14,11 +14,12 @@
    limitations under the License.
 */
 
+using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Basilisque.CodeAnalysis.Syntax;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
 internal static class AutoImplementerGeneratorOutput
 {
@@ -26,23 +27,18 @@ internal static class AutoImplementerGeneratorOutput
     internal static void OutputAttributes(IncrementalGeneratorPostInitializationContext context)
     {
         context.AddSource(
-            AutoImplementerGeneratorData.C_AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_COMPILATIONNAME,
-            AutoImplementerGeneratorData.AUTO_IMPLEMENT_INTERFACE_ATTRIBUTE_SOURCE
+            AutoImplementerGeneratorData.AutoImplementInterfaceAttributeCompilationName,
+            AutoImplementerGeneratorData.AutoImplementInterfaceAttributeSource
         );
 
         context.AddSource(
-            AutoImplementerGeneratorData.C_AUTOIMPLEMENTATTRIBUTE_ON_MEMBERS_COMPILATIONNAME,
-            AutoImplementerGeneratorData.AUTO_IMPLEMENT_ON_MEMBERS_ATTRIBUTE_SOURCE
+            AutoImplementerGeneratorData.AutoImplementOnMembersAttributeCompilationName,
+            AutoImplementerGeneratorData.AutoImplementOnMembersAttributeSource
         );
 
         context.AddSource(
-            AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_COMPILATIONNAME,
-            AutoImplementerGeneratorData.IMPLEMENT_AS_REQUIRED_ATTRIBUTE_SOURCE
-        );
-
-        context.AddSource(
-            AutoImplementerGeneratorData.C_REQUIRED_DOTNET_6_PATCH_COMPILATIONNAME,
-            AutoImplementerGeneratorData.REQUIRED_DOTNET_6_PATCH_SOURCE
+            AutoImplementerGeneratorData.ImplementAsRequiredAttributeCompilationName,
+            AutoImplementerGeneratorData.ImplementAsRequiredAttributeSource
         );
     }
 
@@ -54,7 +50,7 @@ internal static class AutoImplementerGeneratorOutput
         var classDeclaration = generationInfo.ClassToGenerate;
 
         var className = classDeclaration.Identifier.Text;
-        var namespaceName = determineNamespace(classDeclaration);
+        var namespaceName = classDeclaration.GetNamespace();
 
         var compilationName = namespaceName is null ? $"{className}.auto_impl" : $"{namespaceName}.{className}.auto_impl";
 
@@ -109,28 +105,6 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static string? determineNamespace(Microsoft.CodeAnalysis.SyntaxNode? syntaxNode)
-    {
-        // there is no namespace when the node is null
-        if (syntaxNode == null)
-            return null;
-
-        // when the node is a namespace declaration, return the name
-        if (syntaxNode is NamespaceDeclarationSyntax namespaceDeclarationSyntax)
-            return namespaceDeclarationSyntax.Name.ToString();
-
-        // when the node is a file-scoped namespace declaration, return the name
-        if (syntaxNode is FileScopedNamespaceDeclarationSyntax fileScopedNamespaceDeclarationSyntax)
-            return fileScopedNamespaceDeclarationSyntax.Name.ToString();
-
-        // there is no namespace when the node is a compilation unit syntax node
-        if (syntaxNode is CompilationUnitSyntax)
-            return null;
-
-        // recursively check the parent nodes for the namespace
-        return determineNamespace(syntaxNode.Parent);
-    }
-
     private static void implementProperty(Basilisque.CodeAnalysis.Syntax.ClassInfo classInfo, IPropertySymbol propertySymbol, SemanticModel semanticModel)
     {
         // get the full qualified type name of the property
@@ -147,7 +121,7 @@ internal static class AutoImplementerGeneratorOutput
                 fqtn += "?";
         }
 
-        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == AutoImplementerGeneratorData.C_IMPLEMENT_AS_REQUIRED_ATTRIBUTE_CLASSNAME))
+        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == AutoImplementerGeneratorData.ImplementAsRequiredAttributeClassName))
             fqtn = "required " + fqtn;
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);

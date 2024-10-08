@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using Basilisque.AutoImplementer.CodeAnalysis.Generators;
 using Basilisque.CodeAnalysis.Syntax;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
@@ -26,6 +27,20 @@ public class AutoImplementerGenerator : IIncrementalGenerator
 {
     ///<inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        initializePolyfills(context);
+
+        initializeAutoImplementer(context);
+    }
+
+    private void initializePolyfills(IncrementalGeneratorInitializationContext context)
+    {
+        var existingPolyfillsProvider = PolyfillsGeneratorSelectors.GetExistingPolyfills(context).Collect();
+
+        context.RegisterSourceOutput(existingPolyfillsProvider, PolyfillsGeneratorOutput.OutputPolyfills);
+    }
+
+    private void initializeAutoImplementer(IncrementalGeneratorInitializationContext context)
     {
         //get providers
         var classesToGenerateProvider = AutoImplementerGeneratorSelectors.GetClassesToGenerate(context);
