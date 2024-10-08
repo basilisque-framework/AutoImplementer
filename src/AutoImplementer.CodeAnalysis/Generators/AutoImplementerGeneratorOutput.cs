@@ -23,23 +23,10 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
 internal static class AutoImplementerGeneratorOutput
 {
-
     internal static void OutputAttributes(IncrementalGeneratorPostInitializationContext context)
     {
-        context.AddSource(
-            AutoImplementerGeneratorData.AutoImplementInterfaceAttributeCompilationName,
-            AutoImplementerGeneratorData.AutoImplementInterfaceAttributeSource
-        );
-
-        context.AddSource(
-            AutoImplementerGeneratorData.AutoImplementOnMembersAttributeCompilationName,
-            AutoImplementerGeneratorData.AutoImplementOnMembersAttributeSource
-        );
-
-        context.AddSource(
-            AutoImplementerGeneratorData.ImplementAsRequiredAttributeCompilationName,
-            AutoImplementerGeneratorData.ImplementAsRequiredAttributeSource
-        );
+        foreach (var attrib in AutoImplementerGeneratorData.SupportedAttributes)
+            context.AddSource(attrib.Value.CompilationName, attrib.Value.Source);
     }
 
     internal static void OutputImplementations(SourceProductionContext context, (ClassDeclarationSyntax ClassToGenerate, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) generationInfo, RegistrationOptions registrationOptions)

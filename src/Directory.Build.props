@@ -36,6 +36,6 @@
   </ItemGroup>
   
   <ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Tests')) == true OR $(MSBuildProjectName.Contains('.TestAssembly')) == true">
-    <ProjectReference Include="..\AutoImplementer.CodeAnalysis\AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\AutoImplementer.CodeAnalysis\AutoImplementer.CodeAnalysis.csproj" OutputItemType="Analyzer" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,10 @@
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
-internal static class PolyfillsGeneratorData
+/// <summary>
+/// Provides data necessary for generating polyfills for older .NET versions
+/// </summary>
+public static class PolyfillsGeneratorData
 {
     private const string CompilerServicesRequiredMemberAttributeCompilationName = "Polyfill_System.Runtime.CompilerServices.RequiredMemberAttribute.g.cs";
     private const string CompilerServicesCompilerFeatureRequiredAttributeCompilationName = "Polyfill_System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.g.cs";
@@ -85,7 +88,10 @@ namespace System.Runtime.CompilerServices
 
 #endif";
 
-    internal static readonly Dictionary<string, (string CompilationName, string Source)> SupportedPolyfills = new()
+    /// <summary>
+    /// The list of currently supported polyfills
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, (string CompilationName, string Source)> SupportedPolyfills = new Dictionary<string, (string CompilationName, string Source)>()
     {
         { "System.Runtime.CompilerServices.RequiredMemberAttribute", (CompilerServicesRequiredMemberAttributeCompilationName, _compilerServicesRequiredMemberAttributeSource) },
         { "System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute", (CompilerServicesCompilerFeatureRequiredAttributeCompilationName, _compilerServicesCompilerFeatureRequiredAttributeSource) },

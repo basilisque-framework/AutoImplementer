@@ -16,7 +16,10 @@
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
-internal static class AutoImplementerGeneratorData
+/// <summary>
+/// Provides data necessary for generating auto implementations
+/// </summary>
+public static class AutoImplementerGeneratorData
 {
     internal const string AutoImplementedAttributesTargetNamespace = "Basilisque.AutoImplementer.Annotations";
 
@@ -24,9 +27,13 @@ internal static class AutoImplementerGeneratorData
     internal const string AutoImplementOnMembersAttributeClassName = "AutoImplementAttribute";
     internal const string ImplementAsRequiredAttributeClassName = "IRequiredAttribute";
 
-    internal const string AutoImplementInterfaceAttributeCompilationName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}.g";
-    internal const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}.g";
-    internal const string ImplementAsRequiredAttributeCompilationName = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}.g";
+    private const string AutoImplementInterfaceAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
+    private const string AutoImplementOnMembersAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
+    private const string ImplementAsRequiredAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
+
+    private const string AutoImplementInterfaceAttributeCompilationName = $"{AutoImplementInterfaceAttributeFullName}.g";
+    private const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementOnMembersAttributeFullName}.g";
+    private const string ImplementAsRequiredAttributeCompilationName = $"{ImplementAsRequiredAttributeFullName}.g";
 
     private static readonly string _generatedFileSharedHeader = $@"{CommonGeneratorData.GeneratedFileSharedHeader}
 
@@ -36,7 +43,7 @@ using System;";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
 
-    internal static readonly string AutoImplementInterfaceAttributeSource =
+    private static readonly string _autoImplementInterfaceAttributeSource =
     @$"{_generatedFileSharedHeader}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
@@ -50,7 +57,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     }}
 }}";
 
-    internal static readonly string AutoImplementOnMembersAttributeSource =
+    private static readonly string _autoImplementOnMembersAttributeSource =
     @$"{_generatedFileSharedHeader}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
@@ -68,7 +75,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     }}
 }}";
 
-    internal static readonly string ImplementAsRequiredAttributeSource =
+    private static readonly string _implementAsRequiredAttributeSource =
     @$"{_generatedFileSharedHeader}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
@@ -82,4 +89,13 @@ namespace {AutoImplementedAttributesTargetNamespace}
     }}
 }}";
 
+    /// <summary>
+    /// The list of currently supported attributes
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, (string CompilationName, string Source)> SupportedAttributes = new Dictionary<string, (string CompilationName, string Source)>()
+    {
+        { AutoImplementInterfaceAttributeFullName, (AutoImplementInterfaceAttributeCompilationName, _autoImplementInterfaceAttributeSource) },
+        { AutoImplementOnMembersAttributeFullName, (AutoImplementOnMembersAttributeCompilationName, _autoImplementOnMembersAttributeSource) },
+        { ImplementAsRequiredAttributeFullName, (ImplementAsRequiredAttributeCompilationName, _implementAsRequiredAttributeSource) },
+    };
 }
