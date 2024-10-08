@@ -25,15 +25,15 @@ public static class AutoImplementerGeneratorData
 
     internal const string AutoImplementInterfaceAttributeClassName = "AutoImplementInterfaceAttribute";
     internal const string AutoImplementOnMembersAttributeClassName = "AutoImplementAttribute";
-    internal const string ImplementAsRequiredAttributeClassName = "IRequiredAttribute";
+    internal const string ImplementAsRequiredAttributeClassName    = "RequiredAttribute";
 
     private const string AutoImplementInterfaceAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
     private const string AutoImplementOnMembersAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
-    private const string ImplementAsRequiredAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
+    private const string ImplementAsRequiredAttributeFullName    = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
 
     private const string AutoImplementInterfaceAttributeCompilationName = $"{AutoImplementInterfaceAttributeFullName}.g";
     private const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementOnMembersAttributeFullName}.g";
-    private const string ImplementAsRequiredAttributeCompilationName = $"{ImplementAsRequiredAttributeFullName}.g";
+    private const string ImplementAsRequiredAttributeCompilationName    = $"{ImplementAsRequiredAttributeFullName}.g";
 
     private static readonly string _generatedFileSharedHeader = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 

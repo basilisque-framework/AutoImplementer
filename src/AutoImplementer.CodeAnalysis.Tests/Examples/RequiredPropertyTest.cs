@@ -21,14 +21,14 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Tests;
 /* Define the interfaces that should be automatically implemented */
 
 [AutoImplementInterface()]
-public interface IRequiredPropertiesExample
+public interface RequiredPropertiesExample
 {
     string? NullableString { get; set; }
 
-    [IRequired] string RequiredString { get; set; }
+    [Required] string RequiredString { get; set; }
 }
 
-public partial class RequiredPropertiesImpl : IRequiredPropertiesExample
+public partial class RequiredPropertiesImpl : RequiredPropertiesExample
 { }
 
 
