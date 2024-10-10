@@ -44,14 +44,34 @@ public interface IBookDetails
 /* Define some example classes that implement the interfaces */
 
 public partial class Book : ITitle, IDetails, IBookDetails
-{ /* will have the properties Title, Image and Summary */ }
+{
+    /* will have the properties Title, Image and Summary */
+
+    public Book()
+    {
+        Title = "";
+    }
+}
 
 public partial class Movie : ITitle, IDetails
-{ /* will have the properties Title, Image and Summary */ }
+{
+    /* will have the properties Title, Image and Summary */
+
+    public Movie()
+    {
+        Title = "";
+    }
+}
 
 public partial class Song : ITitle
-{ /* will have the property Title */ }
+{
+    /* will have the property Title */
 
+    public Song()
+    {
+        Title = "";
+    }
+}
 
 
 /*
