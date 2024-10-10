@@ -71,7 +71,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     /// </summary>
     {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    internal sealed class {AutoImplementClassInterfacesAttributeClassName} : Attribute
+    internal class {AutoImplementClassInterfacesAttributeClassName} : Attribute
     {{
     }}
 }}";

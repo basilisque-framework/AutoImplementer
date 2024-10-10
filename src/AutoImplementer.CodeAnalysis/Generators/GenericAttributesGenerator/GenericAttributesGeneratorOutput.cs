@@ -14,25 +14,25 @@
    limitations under the License.
 */
 
-using Basilisque.CodeAnalysis.Syntax;
 using System.Collections.Immutable;
+using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGenerator;
 
 internal class GenericAttributesGeneratorOutput
 {
-    internal static void OutputGenericAttributes(SourceProductionContext context, ImmutableArray<IReadOnlyList<GenericAttributesGeneratorInfo>> source, RegistrationOptions options)
+    internal static void OutputGenericAttributes(SourceProductionContext context, ImmutableArray<IReadOnlyList<GenericAttributesGeneratorInfo>> attributeInfos)
     {
         List<int> alreadyImplementedAttributes = new();
 
-        foreach (var genericAttributeInfo in source.SelectMany(list => list))
+        foreach (var genericAttributeInfo in attributeInfos.SelectMany(list => list))
         {
             reportDiagnostic(context, genericAttributeInfo.InvalidTypeArguments);
 
             if (alreadyImplementedAttributes.Contains(genericAttributeInfo.Arity))
                 continue;
 
-            implementGenericInterface(context, genericAttributeInfo.Arity, options);
+            implementGenericInterface(context, genericAttributeInfo.Arity);
 
             alreadyImplementedAttributes.Add(genericAttributeInfo.Arity);
         }
@@ -50,7 +50,24 @@ internal class GenericAttributesGeneratorOutput
         }
     }
 
-    private static void implementGenericInterface(SourceProductionContext context, int arity, RegistrationOptions options)
+    private static void implementGenericInterface(SourceProductionContext context, int arity)
     {
+        var compilationName = $"{GenericAttributesGeneratorData.AutoImplementClassInterfacesAttributeGenericFullName}_generic_{arity}.g";
+
+        var genericTypes = new StringBuilder(@"TInterface1");
+        var genericTypeConstraints = new StringBuilder(@"            where TInterface1 : class
+");
+
+        for (int i = 2; i <= arity; i++)
+        {
+            genericTypes.Append($", TInterface{i}");
+            genericTypeConstraints.AppendLine($"            where TInterface{i} : class");
+        }
+
+        var source = GenericAttributesGeneratorData.AutoImplementClassInterfacesAttributeGenericSourceTemplate
+            .Replace("#GENERIC_TYPES#", genericTypes.ToString())
+            .Replace("#GENERIC_TYPE_CONSTRAINTS#", genericTypeConstraints.ToString());
+
+        context.AddSource(compilationName, source);
     }
 }

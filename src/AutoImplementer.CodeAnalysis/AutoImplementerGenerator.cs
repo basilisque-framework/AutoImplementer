@@ -50,7 +50,7 @@ public class AutoImplementerGenerator : IIncrementalGenerator
         var genericAttributesToGenerateProvider = GenericAttributesGeneratorSelectors.GetGenericAttributesToGenerate(context).Collect();
 
         context.RegisterPostInitializationOutput(StaticAttributesGeneratorOutput.OutputStaticAttributes);
-        context.RegisterCompilationInfoOutput(genericAttributesToGenerateProvider, GenericAttributesGeneratorOutput.OutputGenericAttributes);
+        context.RegisterSourceOutput(genericAttributesToGenerateProvider, GenericAttributesGeneratorOutput.OutputGenericAttributes);
     }
 
     private void initializeAutoImplementer(IncrementalGeneratorInitializationContext context)

@@ -60,26 +60,44 @@ internal static class GenericAttributesGeneratorSelectors
     private static bool isAttributeRelevant(AttributeSyntax attribute, out GenericNameSyntax? genericNameSyntax)
     {
         // ensure attribute is generic
-        if (attribute.Name is not GenericNameSyntax genericName)
+
+        // without namespace like [AutoImplementInterfaces<IType1>]
+        if (attribute.Name is GenericNameSyntax gan)
+        {
+            genericNameSyntax = gan;
+        }
+        // with namespace like [Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces<IType1>]
+        else if (attribute.Name is QualifiedNameSyntax qns
+            && qns.Left is QualifiedNameSyntax qnsl && qnsl.ToString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace
+            && qns.Right is GenericNameSyntax ganr)
+        {
+            genericNameSyntax = ganr;
+        }
+        else
         {
             genericNameSyntax = null;
             return false;
         }
 
-        // assign out parameter
-        genericNameSyntax = genericName;
-
         // ensure attribute has at least one generic type parameter
-        if (genericName.Arity < 1)
+        if (genericNameSyntax.Arity < 1)
             return false;
 
         // ensure TypeArgumentList is not null
-        if (genericName.TypeArgumentList is null)
+        if (genericNameSyntax.TypeArgumentList is null)
             return false;
 
-        // ensure attribute name starts with the name of the attribute class
-        // (use StartsWith because a.Name can be some unfinished stuff like 'AutoImplementInterfaces<IInterface1' or 'AutoImplementInterfacesAttribute<IInterface1, IInte')
-        return attribute.Name.ToString().StartsWith(_attributeNameWithoutSuffix);
+        // get the text of the attribute in the source
+        // This is exactly what the developer typed.
+        // It can be some unfinished stuff like 'AutoImplementInterfaces<IInterface1' or 'AutoImplementInterfacesAttribute<IInterface1, IInte'
+        var attributeName = genericNameSyntax.ToString();
+
+        // check if attribute name starts with AutoImplementInterfaces
+        // examples
+        // [AutoImplementInterfaces<IType1>]
+        // [AutoImplementInterfacesAttribute<IType1>]
+        // [AutoImplementInterfacesAttribute<IType1, IT
+        return attributeName.StartsWith(_attributeNameWithoutSuffix);
     }
 
     private static IReadOnlyList<GenericAttributesGeneratorInfo>? transformAttributeCandidates(GeneratorSyntaxContext context, CancellationToken cancellationToken)
