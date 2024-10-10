@@ -18,7 +18,7 @@
 ## Overview
 This project provides functionality to automatically implement interfaces.
 
-[![NuGet Basilisque.AutoImplementer](https://img.shields.io/badge/NuGet_Basilisque.AutoImplementer-latest-blue.svg)](https://www.nuget.org/packages/Basilisque.AutoImplementer)
+[![NuGet Basilisque.AutoImplementer.CodeAnalysis](https://img.shields.io/badge/NuGet_Basilisque.AutoImplementer.CodeAnalysis-latest-blue.svg)](https://www.nuget.org/packages/Basilisque.AutoImplementer.CodeAnalysis)
 [![License](https://img.shields.io/badge/License-Apache%20License%202.0-red.svg)](LICENSE.txt)
 
 ## Description
@@ -26,7 +26,7 @@ This project contains a source generator that automatically implements interface
 The goal is to provide a workaround for C# not supporting multiple inheritance for some basic use cases.
 
 ## Getting Started
-Install the NuGet package [Basilisque.AutoImplementer](https://www.nuget.org/packages/Basilisque.AutoImplementer).  
+Install the NuGet package [Basilisque.AutoImplementer](https://www.nuget.org/packages/Basilisque.AutoImplementer.CodeAnalysis).  
 Installing the package will add the source generator to your project.
 
 Now you're ready to [start implementing your interfaces automatically](https://github.com/basilisque-framework/AutoImplementer/wiki/Getting-Started).
