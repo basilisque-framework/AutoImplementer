@@ -79,7 +79,7 @@ public partial class MyImplementation : IMyInterface
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 namespace AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties
 {{
-    {AutoImplementerGeneratorData.GeneratedClassSharedAttributes}
+    {CommonGeneratorData.GeneratedClassSharedAttributes}
     public partial class MyImplementation
     {{
         /// <inheritdoc />

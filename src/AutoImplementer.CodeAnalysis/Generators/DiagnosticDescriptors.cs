@@ -14,22 +14,9 @@
    limitations under the License.
 */
 
-using System.Collections.Immutable;
-
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 
-internal static class PolyfillsGeneratorOutput
+internal static class DiagnosticDescriptors
 {
-    internal static void OutputPolyfills(SourceProductionContext context, ImmutableArray<string> existingPolyfills)
-    {
-        foreach (var polyfill in PolyfillsGeneratorData.SupportedPolyfills)
-        {
-            // skip existing polyfills
-            if (existingPolyfills.Contains(polyfill.Key))
-                continue;
-
-            // output polyfill
-            context.AddSource(polyfill.Value.CompilationName, polyfill.Value.Source);
-        }
-    }
+    public static DiagnosticDescriptor GenericAttributeInvalidTypeArgumentType { get { return new DiagnosticDescriptor("BAS_AUI_001", "Invalid type argument.", "The type '{0}' cannot be automatically implemented, because it is not an interface.", "Basilisque.AutoImplementer", DiagnosticSeverity.Error, true); } }
 }

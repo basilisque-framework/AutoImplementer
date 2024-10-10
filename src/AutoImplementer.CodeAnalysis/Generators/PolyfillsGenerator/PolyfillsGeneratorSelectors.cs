@@ -18,7 +18,7 @@ using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Threading;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
 
 internal static class PolyfillsGeneratorSelectors
 {

@@ -14,7 +14,8 @@
    limitations under the License.
 */
 
-using Basilisque.AutoImplementer.CodeAnalysis.Generators;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.TestSupport.MSTest.SourceGenerators.UnitTests.Verifiers;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
@@ -173,7 +174,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
 
     private void addStaticSources(List<(string Name, string SourceText)> sources)
     {
-        sources.AddRange(GetExpectedAttributeSources(AutoImplementerGeneratorData.SupportedAttributes));
+        sources.AddRange(GetExpectedAttributeSources(StaticAttributesGeneratorData.SupportedAttributes));
         sources.AddRange(GetExpectedPolyfillSources(PolyfillsGeneratorData.SupportedPolyfills));
     }
 }

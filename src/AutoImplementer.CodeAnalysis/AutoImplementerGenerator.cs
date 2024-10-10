@@ -14,7 +14,10 @@
    limitations under the License.
 */
 
-using Basilisque.AutoImplementer.CodeAnalysis.Generators;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGenerator;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
@@ -30,6 +33,8 @@ public class AutoImplementerGenerator : IIncrementalGenerator
     {
         initializePolyfills(context);
 
+        initializeAttributes(context);
+
         initializeAutoImplementer(context);
     }
 
@@ -40,13 +45,18 @@ public class AutoImplementerGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(existingPolyfillsProvider, PolyfillsGeneratorOutput.OutputPolyfills);
     }
 
+    private void initializeAttributes(IncrementalGeneratorInitializationContext context)
+    {
+        var genericAttributesToGenerateProvider = GenericAttributesGeneratorSelectors.GetGenericAttributesToGenerate(context).Collect();
+
+        context.RegisterPostInitializationOutput(StaticAttributesGeneratorOutput.OutputStaticAttributes);
+        context.RegisterCompilationInfoOutput(genericAttributesToGenerateProvider, GenericAttributesGeneratorOutput.OutputGenericAttributes);
+    }
+
     private void initializeAutoImplementer(IncrementalGeneratorInitializationContext context)
     {
-        //get providers
         var classesToGenerateProvider = AutoImplementerGeneratorSelectors.GetClassesToGenerate(context);
 
-        //write output
-        context.RegisterPostInitializationOutput(AutoImplementerGeneratorOutput.OutputAttributes);
         context.RegisterCompilationInfoOutput(classesToGenerateProvider, AutoImplementerGeneratorOutput.OutputImplementations);
     }
 }

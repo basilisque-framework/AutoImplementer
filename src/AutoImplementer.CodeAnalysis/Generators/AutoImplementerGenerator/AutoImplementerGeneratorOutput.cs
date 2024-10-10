@@ -15,21 +15,16 @@
 */
 
 using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
+using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
 internal static class AutoImplementerGeneratorOutput
 {
-    internal static void OutputAttributes(IncrementalGeneratorPostInitializationContext context)
-    {
-        foreach (var attrib in AutoImplementerGeneratorData.SupportedAttributes)
-            context.AddSource(attrib.Value.CompilationName, attrib.Value.Source);
-    }
-
-    internal static void OutputImplementations(SourceProductionContext context, (ClassDeclarationSyntax ClassToGenerate, SemanticModel SemanticModel, ImmutableArray<INamedTypeSymbol> Interfaces) generationInfo, RegistrationOptions registrationOptions)
+    internal static void OutputImplementations(SourceProductionContext context, (ClassDeclarationSyntax ClassToGenerate, ImmutableArray<INamedTypeSymbol> Interfaces) generationInfo, RegistrationOptions registrationOptions)
     {
         if (!checkPreconditions(registrationOptions))
             return;
@@ -55,33 +50,15 @@ internal static class AutoImplementerGeneratorOutput
                     switch (member)
                     {
                         case IPropertySymbol propertySymbol:
-                            implementProperty(cl, propertySymbol, generationInfo.SemanticModel);
+                            implementProperty(cl, propertySymbol);
                             break;
 
                             //case IMethodSymbol methodSymbol:
-                            //    implementMethod(cl, methodSymbol, generationInfo.SemanticModel);
+                            //    implementMethod(cl, methodSymbol);
                             //    break;
                     }
                 }
             }
-
-
-
-
-            //    var missingAssemblyNameDiagnostic = Diagnostic.Create(DiagnosticDescriptors.MissingAssemblyName, Location.None);
-            //    context.ReportDiagnostic(missingAssemblyNameDiagnostic);
-
-
-
-            //var initializeDependenciesGeneratedMethod = new MethodInfo(true, "initializeDependenciesGenerated")
-            //{
-            //    Parameters = {
-            //            new ParameterInfo(ParameterKind.Ordinary, "DependencyCollection", "collection")
-            //        }
-            //};
-            //initializeDependenciesGeneratedMethod.Body.Add(@"/* initialize dependencies - generated from assembly dependencies */");
-            //addDependenciesToBody(cancellationToken, initializeDependenciesGeneratedMethod.Body, namedDependencyRegistratorTypes);
-            //cl.Methods.Add(initializeDependenciesGeneratedMethod);
         }).AddToSourceProductionContext();
     }
 
@@ -93,7 +70,7 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static void implementProperty(Basilisque.CodeAnalysis.Syntax.ClassInfo classInfo, IPropertySymbol propertySymbol, SemanticModel semanticModel)
+    private static void implementProperty(Basilisque.CodeAnalysis.Syntax.ClassInfo classInfo, IPropertySymbol propertySymbol)
     {
         // get the full qualified type name of the property
         var fqtn = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -109,7 +86,7 @@ internal static class AutoImplementerGeneratorOutput
                 fqtn += "?";
         }
 
-        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == AutoImplementerGeneratorData.ImplementAsRequiredAttributeClassName))
+        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
             fqtn = "required " + fqtn;
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);

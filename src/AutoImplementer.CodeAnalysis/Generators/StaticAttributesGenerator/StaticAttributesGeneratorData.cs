@@ -14,40 +14,32 @@
    limitations under the License.
 */
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
+using static Basilisque.AutoImplementer.CodeAnalysis.Generators.CommonGeneratorData;
+
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 
 /// <summary>
 /// Provides data necessary for generating auto implementations
 /// </summary>
-public static class AutoImplementerGeneratorData
+public static class StaticAttributesGeneratorData
 {
-    internal const string AutoImplementedAttributesTargetNamespace = "Basilisque.AutoImplementer.Annotations";
-
     internal const string AutoImplementInterfaceAttributeClassName = "AutoImplementInterfaceAttribute";
+    internal const string AutoImplementClassInterfacesAttributeClassName = "AutoImplementInterfacesAttribute";
     internal const string AutoImplementOnMembersAttributeClassName = "AutoImplementAttribute";
-    internal const string ImplementAsRequiredAttributeClassName    = "RequiredAttribute";
+    internal const string ImplementAsRequiredAttributeClassName = "RequiredAttribute";
 
-    private const string AutoImplementInterfaceAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
-    private const string AutoImplementOnMembersAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
-    private const string ImplementAsRequiredAttributeFullName    = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
+    internal const string AutoImplementInterfaceAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
+    internal const string AutoImplementClassInterfacesAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementClassInterfacesAttributeClassName}";
+    internal const string AutoImplementOnMembersAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
+    internal const string ImplementAsRequiredAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
 
     private const string AutoImplementInterfaceAttributeCompilationName = $"{AutoImplementInterfaceAttributeFullName}.g";
+    private const string AutoImplementClassInterfacesAttributeCompilationName = $"{AutoImplementClassInterfacesAttributeFullName}.g";
     private const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementOnMembersAttributeFullName}.g";
-    private const string ImplementAsRequiredAttributeCompilationName    = $"{ImplementAsRequiredAttributeFullName}.g";
-
-    private static readonly string _generatedFileSharedHeader = $@"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-
-using System;";
-
-    /// <summary>
-    /// Provides the attributes that are output for each class as a string
-    /// </summary>
-    public static readonly string GeneratedClassSharedAttributes = $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{CommonGeneratorData.AssemblyName.Name}"", ""{CommonGeneratorData.AssemblyName.Version}"")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
+    private const string ImplementAsRequiredAttributeCompilationName = $"{ImplementAsRequiredAttributeFullName}.g";
 
     private static readonly string _autoImplementInterfaceAttributeSource =
-    @$"{_generatedFileSharedHeader}
+    @$"{GeneratedFileSharedHeaderWithUsings}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
@@ -57,11 +49,35 @@ namespace {AutoImplementedAttributesTargetNamespace}
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     internal sealed class {AutoImplementInterfaceAttributeClassName} : Attribute
     {{
+        /// <summary>
+        /// Forces the interface to be automatically implemented event if the implementing class isn't marked with the <see cref=""{AutoImplementedAttributesTargetNamespace}.{AutoImplementClassInterfacesAttributeClassName}""/>.
+        /// </summary>
+        public bool Force {{ get; set; }} = false;
+
+        /// <summary>
+        /// Determines if all properties of the interface should be implemented with the 'required' keyword.
+        /// </summary>
+        public bool ImplementAllPropertiesRequired {{ get; set; }} = false;
+    }}
+}}";
+
+    private static readonly string _autoImplementClassInterfacesAttributeSource =
+    @$"{GeneratedFileSharedHeaderWithUsings}
+namespace {AutoImplementedAttributesTargetNamespace}
+{{
+    /// <summary>
+    /// Marks a class for automatic implementation of its interfaces.
+    /// By default all interfaces marked with <see cref=""{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}""/> will be implemented. The interfaces also can be explicitly stated.
+    /// </summary>
+    {GeneratedClassSharedAttributes}
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    internal sealed class {AutoImplementClassInterfacesAttributeClassName} : Attribute
+    {{
     }}
 }}";
 
     private static readonly string _autoImplementOnMembersAttributeSource =
-    @$"{_generatedFileSharedHeader}
+    @$"{GeneratedFileSharedHeaderWithUsings}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
@@ -79,7 +95,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
 }}";
 
     private static readonly string _implementAsRequiredAttributeSource =
-    @$"{_generatedFileSharedHeader}
+    @$"{GeneratedFileSharedHeaderWithUsings}
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
@@ -98,6 +114,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     public static readonly IReadOnlyDictionary<string, (string CompilationName, string Source)> SupportedAttributes = new Dictionary<string, (string CompilationName, string Source)>()
     {
         { AutoImplementInterfaceAttributeFullName, (AutoImplementInterfaceAttributeCompilationName, _autoImplementInterfaceAttributeSource) },
+        { AutoImplementClassInterfacesAttributeFullName, (AutoImplementClassInterfacesAttributeCompilationName, _autoImplementClassInterfacesAttributeSource) },
         { AutoImplementOnMembersAttributeFullName, (AutoImplementOnMembersAttributeCompilationName, _autoImplementOnMembersAttributeSource) },
         { ImplementAsRequiredAttributeFullName, (ImplementAsRequiredAttributeCompilationName, _implementAsRequiredAttributeSource) },
     };

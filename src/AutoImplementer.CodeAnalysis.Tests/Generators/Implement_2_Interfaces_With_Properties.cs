@@ -84,7 +84,7 @@ public partial class Movie : ITitle, IDetails
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
 namespace AutoImpl.TestObjects.Implement_2_Interfaces_With_Properties
 {{
-    {AutoImplementerGeneratorData.GeneratedClassSharedAttributes}
+    {CommonGeneratorData.GeneratedClassSharedAttributes}
     public partial class Movie
     {{
         /// <inheritdoc />

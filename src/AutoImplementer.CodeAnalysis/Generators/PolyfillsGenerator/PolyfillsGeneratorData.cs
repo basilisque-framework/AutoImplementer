@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
 
 /// <summary>
 /// Provides data necessary for generating polyfills for older .NET versions
