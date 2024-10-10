@@ -16,7 +16,7 @@
 
 using Basilisque.AutoImplementer.Annotations;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Tests;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Examples;
 
 /* Define the interfaces that should be automatically implemented */
 
@@ -33,6 +33,7 @@ public partial class RequiredPropertiesImpl : IRequiredPropertiesExample
 
 
 [TestClass]
+[TestCategory("Examples")]
 public partial class RequiredPropertyTests
 {
     [TestMethod]

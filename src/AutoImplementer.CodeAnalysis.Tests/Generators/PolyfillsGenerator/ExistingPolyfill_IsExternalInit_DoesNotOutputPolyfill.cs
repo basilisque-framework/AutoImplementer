@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis.Testing;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.PolyfillsGenerator;
 
 [TestClass]
+[TestCategory("PolyfillsGenerator")]
 public class ExistingPolyfill_IsExternalInit_DoesNotOutputPolyfill : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)
