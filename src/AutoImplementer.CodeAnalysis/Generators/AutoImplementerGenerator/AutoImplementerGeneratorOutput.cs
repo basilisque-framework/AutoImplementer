@@ -29,6 +29,12 @@ internal static class AutoImplementerGeneratorOutput
         if (!checkPreconditions(registrationOptions))
             return;
 
+        var syntaxNodesToImplement = getSyntaxNodesToImplement(generationInfo.Interfaces);
+
+        // skip if nothing to implement
+        if (!syntaxNodesToImplement.Any())
+            return;
+
         var classDeclaration = generationInfo.ClassToGenerate;
 
         var className = classDeclaration.Identifier.Text;
@@ -43,20 +49,16 @@ internal static class AutoImplementerGeneratorOutput
         {
             cl.IsPartial = true;
 
-            foreach (var interfaceInfo in generationInfo.Interfaces)
+            foreach (var node in syntaxNodesToImplement)
             {
-                foreach (var member in interfaceInfo.GetMembers())
+                switch (node)
                 {
-                    switch (member)
-                    {
-                        case IPropertySymbol propertySymbol:
-                            implementProperty(cl, propertySymbol);
-                            break;
-
-                            //case IMethodSymbol methodSymbol:
-                            //    implementMethod(cl, methodSymbol);
-                            //    break;
-                    }
+                    case Basilisque.CodeAnalysis.Syntax.PropertyInfo pi:
+                        cl.Properties.Add(pi);
+                        break;
+                    case Basilisque.CodeAnalysis.Syntax.MethodInfo mi:
+                        cl.Methods.Add(mi);
+                        break;
                 }
             }
         }).AddToSourceProductionContext();
@@ -70,13 +72,44 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static void implementProperty(Basilisque.CodeAnalysis.Syntax.ClassInfo classInfo, IPropertySymbol propertySymbol)
+    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(ImmutableArray<INamedTypeSymbol> interfaces)
+    {
+        foreach (var i in interfaces)
+        {
+            var members = i.GetMembers();
+
+            foreach (var member in members)
+            {
+                Basilisque.CodeAnalysis.Syntax.SyntaxNode? node;
+
+                switch (member)
+                {
+                    case IPropertySymbol propertySymbol:
+                        node = implementProperty(propertySymbol);
+                        break;
+                    //case IMethodSymbol methodSymbol:
+                    //    yield return implementMethod(methodSymbol);
+                    //    break;
+                    default:
+                        node = null;
+                        break;
+                }
+
+                if (node is null)
+                    continue;
+
+                yield return node;
+            }
+        }
+    }
+
+    private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(IPropertySymbol propertySymbol)
     {
         // get the full qualified type name of the property
         var fqtn = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
         if (string.IsNullOrWhiteSpace(fqtn))
-            return;
+            return null;
 
         // check if the property is nullable
         if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
@@ -94,7 +127,7 @@ internal static class AutoImplementerGeneratorOutput
         pi.InheritXmlDoc = true;
         pi.AccessModifier = mapAccessibility(propertySymbol.DeclaredAccessibility);
 
-        classInfo.Properties.Add(pi);
+        return pi;
     }
 
     private static AccessModifier mapAccessibility(Accessibility declaredAccessibility)
