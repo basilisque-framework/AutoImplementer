@@ -16,7 +16,7 @@
 
 using Microsoft.CodeAnalysis.Testing;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.PolyfillsGenerator;
 
 [TestClass]
 public class ExistingPolyfill_IsExternalInit_DoesNotOutputPolyfill : BaseAutoImplementerGeneratorTest

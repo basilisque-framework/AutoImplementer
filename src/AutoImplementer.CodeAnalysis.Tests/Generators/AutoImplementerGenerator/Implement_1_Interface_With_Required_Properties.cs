@@ -17,7 +17,7 @@
 using Basilisque.AutoImplementer.CodeAnalysis.Generators;
 using Microsoft.CodeAnalysis.Testing;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
 [TestClass]
 public class Implement_1_Interface_With_Required_Properties : BaseAutoImplementerGeneratorTest
@@ -30,7 +30,7 @@ public class Implement_1_Interface_With_Required_Properties : BaseAutoImplemente
 
 using Basilisque.AutoImplementer.Annotations;
 
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties;
 
 /// <summary>
 /// The interface to be implemented
@@ -62,7 +62,7 @@ public interface IMyInterface
 
         // class that implements the interface
         sources.Add(@"
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties;
 
 /// <summary>
 /// The class implementing the interface
@@ -75,9 +75,9 @@ public partial class MyImplementation : IMyInterface
     protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
     {
         yield return (
-            Name: "AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs",
+            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties
 {{
     {CommonGeneratorData.GeneratedClassSharedAttributes}
     public partial class MyImplementation
@@ -104,8 +104,8 @@ namespace AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties
         // There should be exactly one warning CS8618 stating that 'StringNotRequired' must contain a non-null value when exiting constructor.
         // The 'IntNotRequired' property doesn't raise this warning and the other two properties are marked as required.
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40)
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40);
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40)
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40);
     }
 }
 

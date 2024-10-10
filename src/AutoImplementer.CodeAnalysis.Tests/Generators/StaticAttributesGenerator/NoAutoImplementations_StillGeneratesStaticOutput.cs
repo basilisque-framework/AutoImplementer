@@ -16,7 +16,7 @@
 
 using Microsoft.CodeAnalysis.Testing;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.StaticAttributesGenerator;
 
 [TestClass]
 public class NoAutoImplementations_StillGeneratesStaticOutput : BaseAutoImplementerGeneratorTest

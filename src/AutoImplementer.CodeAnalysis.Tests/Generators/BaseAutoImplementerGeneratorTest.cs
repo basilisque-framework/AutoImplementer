@@ -25,11 +25,11 @@ using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
 
-public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<AutoImplementerGenerator>>
+public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>>
 { }
 
-public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<AutoImplementerGenerator, TVerifier>
-    where TVerifier : IncrementalSourceGeneratorVerifier<AutoImplementerGenerator>, new()
+public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator, TVerifier>
+    where TVerifier : IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>, new()
 { }
 
 public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>

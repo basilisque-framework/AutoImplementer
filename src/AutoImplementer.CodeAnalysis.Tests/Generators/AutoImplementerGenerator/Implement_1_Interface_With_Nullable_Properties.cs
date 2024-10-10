@@ -17,7 +17,7 @@
 using Basilisque.AutoImplementer.CodeAnalysis.Generators;
 using Microsoft.CodeAnalysis.Testing;
 
-namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
+namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
 [TestClass]
 public class Implement_1_Interface_With_Nullable_Properties : BaseAutoImplementerGeneratorTest
@@ -28,7 +28,7 @@ public class Implement_1_Interface_With_Nullable_Properties : BaseAutoImplemente
         sources.Add(@"
 #nullable enable
 
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties;
 
 /// <summary>
 /// A class used as parameter type
@@ -76,7 +76,7 @@ public interface IMyInterface
 
         // class that implements the interface
         sources.Add(@"
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties;
 
 /// <summary>
 /// The class implementing the interface
@@ -89,9 +89,9 @@ public partial class MyImplementation : IMyInterface
     protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
     {
         yield return (
-            Name: "AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyImplementation.auto_impl.g.cs",
+            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties
 {{
     {CommonGeneratorData.GeneratedClassSharedAttributes}
     public partial class MyImplementation
@@ -112,7 +112,7 @@ namespace AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties
         public string? StringWithQuestionMark {{ get; set; }}
         
         /// <inheritdoc />
-        public global::AutoImpl.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyTestClass? MyTestClassWithQuestionMark {{ get; set; }}
+        public global::AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyTestClass? MyTestClassWithQuestionMark {{ get; set; }}
     }}
 }}
 
