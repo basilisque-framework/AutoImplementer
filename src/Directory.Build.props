@@ -17,6 +17,8 @@
   <!-- general build properties -->
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
+
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
   
   <!-- NuGet package properties and project info -->
