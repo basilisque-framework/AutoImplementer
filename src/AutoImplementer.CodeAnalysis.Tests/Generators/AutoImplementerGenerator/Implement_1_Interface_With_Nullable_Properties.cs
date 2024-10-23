@@ -82,6 +82,7 @@ namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Propertie
 /// <summary>
 /// The class implementing the interface
 /// </summary>
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class MyImplementation : IMyInterface
 { }
 ");

@@ -20,7 +20,6 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Examples;
 
 /* Define the interfaces that should be automatically implemented */
 
-[AutoImplementInterface()]
 public interface IRequiredPropertiesExample
 {
     string? NullableString { get; set; }
@@ -28,6 +27,7 @@ public interface IRequiredPropertiesExample
     [Required] string RequiredString { get; set; }
 }
 
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces(typeof(IRequiredPropertiesExample))]
 public partial class RequiredPropertiesImpl : IRequiredPropertiesExample
 { }
 

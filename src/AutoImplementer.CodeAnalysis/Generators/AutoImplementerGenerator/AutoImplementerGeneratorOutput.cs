@@ -17,19 +17,15 @@
 using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
-using System.Collections.Immutable;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
 internal static class AutoImplementerGeneratorOutput
 {
-    internal static void OutputImplementations(SourceProductionContext context, AutoImplementerGeneratorInfo? autoImplementerGeneratorInfo, RegistrationOptions registrationOptions)
+    internal static void OutputImplementations(SourceProductionContext context, AutoImplementerGeneratorInfo generationInfo, RegistrationOptions registrationOptions)
     {
         if (!checkPreconditions(registrationOptions))
             return;
-
-        //autoImplementerGeneratorInfo is never null. This is already checked in the selector
-        var generationInfo = autoImplementerGeneratorInfo!.Value;
 
         var syntaxNodesToImplement = getSyntaxNodesToImplement(generationInfo.Interfaces);
 
@@ -37,7 +33,7 @@ internal static class AutoImplementerGeneratorOutput
         if (!syntaxNodesToImplement.Any())
             return;
 
-        var classDeclaration = generationInfo.Node;
+        var classDeclaration = generationInfo.ClassDeclaration;
 
         var className = classDeclaration.Identifier.Text;
         var namespaceName = classDeclaration.GetNamespace();
@@ -74,7 +70,7 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(ImmutableArray<INamedTypeSymbol> interfaces)
+    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(List<INamedTypeSymbol> interfaces)
     {
         foreach (var i in interfaces)
         {

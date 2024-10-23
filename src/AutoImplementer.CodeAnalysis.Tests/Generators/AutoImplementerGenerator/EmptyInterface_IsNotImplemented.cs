@@ -47,6 +47,7 @@ namespace AutoImpl.AIG.TestObjects.EmptyInterface_IsNotImplemented;
 /// <summary>
 /// The class implementing the interface
 /// </summary>
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class MyImplementation : IMyInterface
 { }
 ");

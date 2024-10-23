@@ -15,15 +15,64 @@
 */
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Immutable;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
-internal struct AutoImplementerGeneratorInfo
+internal class AutoImplementerGeneratorInfo
 {
-    public ClassDeclarationSyntax Node { get; set; }
+    private List<INamedTypeSymbol>? _interfaces = null;
+    private List<Diagnostic>? _diagnostics = null;
 
-    public ImmutableArray<INamedTypeSymbol> Interfaces { get; set; }
+    public ClassDeclarationSyntax ClassDeclaration { get; set; }
 
-    public IReadOnlyList<Diagnostic>? Diagnostics { get; set; }
+    public bool HasData
+    {
+        get
+        {
+            return HasInterfaces || HasDiagnostics;
+        }
+    }
+
+    public bool HasInterfaces
+    {
+        get
+        {
+            return _interfaces?.Any() == true;
+        }
+    }
+
+    public bool HasDiagnostics
+    {
+        get
+        {
+            return _diagnostics?.Any() == true;
+        }
+    }
+
+    public List<INamedTypeSymbol> Interfaces
+    {
+        get
+        {
+            if (_interfaces is null)
+                _interfaces = new List<INamedTypeSymbol>();
+
+            return _interfaces;
+        }
+    }
+
+    public List<Diagnostic> Diagnostics
+    {
+        get
+        {
+            if (_diagnostics is null)
+                _diagnostics = new List<Diagnostic>();
+
+            return _diagnostics;
+        }
+    }
+
+    public AutoImplementerGeneratorInfo(ClassDeclarationSyntax classDeclaration)
+    {
+        ClassDeclaration = classDeclaration;
+    }
 }

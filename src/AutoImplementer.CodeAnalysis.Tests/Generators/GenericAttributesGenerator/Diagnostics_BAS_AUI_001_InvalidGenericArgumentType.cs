@@ -74,10 +74,10 @@ namespace Basilisque.AutoImplementer.Annotations
 {{
     /// <summary>
     /// Marks a class for automatic implementation of its interfaces.
-    /// By default all interfaces marked with <see cref=""Basilisque.AutoImplementer.Annotations.AutoImplementInterfaceAttribute""/> will be implemented. The interfaces also can be explicitly stated.
+    /// By default all interfaces marked with <see cref=""Basilisque.AutoImplementer.Annotations.AutoImplementInterfaceAttribute""/> will be implemented. Alternatively, the interfaces can be specified explicitly.
     /// </summary>
     {CommonGeneratorData.GeneratedClassSharedAttributes}
-    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     internal sealed class AutoImplementInterfacesAttribute<TInterface1, TInterface2, TInterface3, TInterface4> : Basilisque.AutoImplementer.Annotations.AutoImplementInterfacesAttribute
             where TInterface1 : class
             where TInterface2 : class
@@ -90,11 +90,11 @@ namespace Basilisque.AutoImplementer.Annotations
 
     protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
     {
-        // There should be exactly one warning CS8618 stating that 'StringNotRequired' must contain a non-null value when exiting constructor.
-        // The 'IntNotRequired' property doesn't raise this warning and the other two properties are marked as required.
+        // 'string' is not an interface
         yield return DiagnosticResult.CompilerError("BAS_AUI_001")
             .WithSpan(System.IO.Path.Combine("/0/Test1.cs"), 15, 64, 15, 75);
 
+        // 'MyTestClass' is not an interface
         yield return DiagnosticResult.CompilerError("BAS_AUI_001")
             .WithSpan(System.IO.Path.Combine("/0/Test1.cs"), 15, 41, 15, 47);
     }

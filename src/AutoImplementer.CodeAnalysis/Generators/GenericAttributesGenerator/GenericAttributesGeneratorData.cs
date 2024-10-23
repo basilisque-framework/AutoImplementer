@@ -35,10 +35,10 @@ namespace {CommonGeneratorData.AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
     /// Marks a class for automatic implementation of its interfaces.
-    /// By default all interfaces marked with <see cref=""{StaticAttributesGeneratorData.AutoImplementInterfaceAttributeFullName}""/> will be implemented. The interfaces also can be explicitly stated.
+    /// By default all interfaces marked with <see cref=""{StaticAttributesGeneratorData.AutoImplementInterfaceAttributeFullName}""/> will be implemented. Alternatively, the interfaces can be specified explicitly.
     /// </summary>
     {CommonGeneratorData.GeneratedClassSharedAttributes}
-    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     internal sealed class {AutoImplementClassInterfacesAttributeGenericClassName}<#GENERIC_TYPES#> : {StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeFullName}
 #GENERIC_TYPE_CONSTRAINTS#    {{
     }}

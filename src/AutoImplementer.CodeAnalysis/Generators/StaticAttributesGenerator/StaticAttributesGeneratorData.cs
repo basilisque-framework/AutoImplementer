@@ -43,21 +43,16 @@ public static class StaticAttributesGeneratorData
 namespace {AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
-    /// Marks an interface with all members for automatic implementation
+    /// Offers settings to influence how the interface is implemented when using Basilisque.AutoImplementer.
     /// </summary>
     {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     internal sealed class {AutoImplementInterfaceAttributeClassName} : Attribute
     {{
         /// <summary>
-        /// Forces the interface to be automatically implemented event if the implementing class isn't marked with the <see cref=""{AutoImplementedAttributesTargetNamespace}.{AutoImplementClassInterfacesAttributeClassName}""/>.
-        /// </summary>
-        public bool Force {{ get; set; }} = false;
-
-        /// <summary>
         /// Determines if all properties of the interface should be implemented with the 'required' keyword.
         /// </summary>
-        public bool ImplementAllPropertiesRequired {{ get; set; }} = false;
+        public bool ImplementAllPropertiesAsRequired {{ get; set; }} = false;
     }}
 }}";
 
@@ -67,10 +62,10 @@ namespace {AutoImplementedAttributesTargetNamespace}
 {{
     /// <summary>
     /// Marks a class for automatic implementation of its interfaces.
-    /// By default all interfaces marked with <see cref=""{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}""/> will be implemented. The interfaces also can be explicitly stated.
+    /// By default all interfaces marked with <see cref=""{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}""/> will be implemented. Alternatively, the interfaces can be specified explicitly.
     /// </summary>
     {GeneratedClassSharedAttributes}
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     internal class {AutoImplementClassInterfacesAttributeClassName} : Attribute
     {{
         public {AutoImplementClassInterfacesAttributeClassName}(params Type[] interfacesToImplement)

@@ -73,6 +73,7 @@ namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties;
 /// <summary>
 /// Represents a movie
 /// </summary>
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class Movie : ITitle, IDetails
 { }
 ");

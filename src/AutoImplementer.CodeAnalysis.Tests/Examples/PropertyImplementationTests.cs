@@ -33,7 +33,6 @@ public interface IDetails
     string? Summary { get; set; }
 }
 
-[AutoImplementInterface()]
 public interface IBookDetails
 {
     int? NoOfPages { get; set; }
@@ -43,6 +42,9 @@ public interface IBookDetails
 
 /* Define some example classes that implement the interfaces */
 
+
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()] /* implements all interfaces of 'Book' that have an AutoImplementInterface attribute */
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces<IBookDetails>()] /* IBookDetails doesn't have an AutoImplementInterface attribute but shall be implemented anyway */
 public partial class Book : ITitle, IDetails, IBookDetails
 {
     /* will have the properties Title, Image and Summary */
@@ -53,6 +55,7 @@ public partial class Book : ITitle, IDetails, IBookDetails
     }
 }
 
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class Movie : ITitle, IDetails
 {
     /* will have the properties Title, Image and Summary */
@@ -63,6 +66,7 @@ public partial class Movie : ITitle, IDetails
     }
 }
 
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class Song : ITitle
 {
     /* will have the property Title */

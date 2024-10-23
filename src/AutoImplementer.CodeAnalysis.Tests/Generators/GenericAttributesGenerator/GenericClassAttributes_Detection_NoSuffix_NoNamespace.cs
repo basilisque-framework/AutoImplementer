@@ -62,10 +62,10 @@ namespace Basilisque.AutoImplementer.Annotations
 {{
     /// <summary>
     /// Marks a class for automatic implementation of its interfaces.
-    /// By default all interfaces marked with <see cref=""Basilisque.AutoImplementer.Annotations.AutoImplementInterfaceAttribute""/> will be implemented. The interfaces also can be explicitly stated.
+    /// By default all interfaces marked with <see cref=""Basilisque.AutoImplementer.Annotations.AutoImplementInterfaceAttribute""/> will be implemented. Alternatively, the interfaces can be specified explicitly.
     /// </summary>
     {CommonGeneratorData.GeneratedClassSharedAttributes}
-    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     internal sealed class AutoImplementInterfacesAttribute<TInterface1> : Basilisque.AutoImplementer.Annotations.AutoImplementInterfacesAttribute
             where TInterface1 : class
     {{
