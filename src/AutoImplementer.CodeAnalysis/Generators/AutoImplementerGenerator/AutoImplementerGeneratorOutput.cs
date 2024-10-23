@@ -91,7 +91,7 @@ internal static class AutoImplementerGeneratorOutput
                 switch (member)
                 {
                     case IPropertySymbol propertySymbol:
-                        node = implementProperty(propertySymbol);
+                        node = implementProperty(propertySymbol, i.Value);
                         break;
                     //case IMethodSymbol methodSymbol:
                     //    yield return implementMethod(methodSymbol);
@@ -119,7 +119,7 @@ internal static class AutoImplementerGeneratorOutput
         return string.Join(", ", baseInterfaces);
     }
 
-    private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(IPropertySymbol propertySymbol)
+    private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(IPropertySymbol propertySymbol, AutoImplementerGeneratorInterfaceInfo info)
     {
         // get the full qualified type name of the property
         var fqtn = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -135,7 +135,7 @@ internal static class AutoImplementerGeneratorOutput
                 fqtn += "?";
         }
 
-        if (propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
+        if (info.ImplementAllPropertiesAsRequired || propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
             fqtn = "required " + fqtn;
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);

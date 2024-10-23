@@ -19,4 +19,5 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGene
 internal class AutoImplementerGeneratorInterfaceInfo
 {
     public bool IsInBaseList { get; internal set; }
+    public bool ImplementAllPropertiesAsRequired { get; internal set; } = false;
 }

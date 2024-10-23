@@ -152,7 +152,7 @@ internal static class AutoImplementerGeneratorSelectors
             Action<INamedTypeSymbol, AttributeData, AutoImplementerGeneratorInfo> action;
             if (classAttribute.AttributeClass?.IsGenericType == true)
                 action = addInterfacesForGenericAttribute;
-            else if (classAttribute.ConstructorArguments.Any(ca => ca.Values.Any()))
+            else if (classAttribute.ConstructorArguments.Any(ca => ca.Kind == TypedConstantKind.Type || (ca.Kind == TypedConstantKind.Array && ca.Values.Any())))
                 action = addInterfacesForConstructorParameters;
             else if (classSymbol.AllInterfaces.Any())
                 action = addInterfacesFromBaseTypes;
@@ -187,10 +187,8 @@ internal static class AutoImplementerGeneratorSelectors
 
             if (!generatorInfo.Interfaces.ContainsKey(namedTypeSymbolValue))
             {
-                var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
-                {
-                    IsInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue),
-                };
+                var isInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue);
+                var interfaceInfo = createAutoImplementerGeneratorInterfaceInfo(namedTypeSymbolValue, isInBaseList);
 
                 generatorInfo.Interfaces.Add(namedTypeSymbolValue, interfaceInfo);
             }
@@ -199,39 +197,72 @@ internal static class AutoImplementerGeneratorSelectors
 
     private static void addInterfacesForConstructorParameters(INamedTypeSymbol classSymbol, AttributeData classAttribute, AutoImplementerGeneratorInfo generatorInfo)
     {
-        foreach (var constructorArgument in classAttribute.ConstructorArguments)
+        var syntaxReference = classAttribute.ApplicationSyntaxReference;
+        if (syntaxReference == null)
+            return;
+
+        var syntaxNode = syntaxReference.GetSyntax() as AttributeSyntax;
+        if (syntaxNode == null)
+            return;
+
+        var argumentList = syntaxNode.ArgumentList;
+        if (argumentList == null)
+            return;
+
+        if (argumentList.Arguments.Count < classAttribute.ConstructorArguments.Length)
+            return;
+
+        for (int i = 0; i < classAttribute.ConstructorArguments.Length; ++i)
         {
+            var constructorArgument = classAttribute.ConstructorArguments[i];
+
             if (constructorArgument.IsNull)
                 continue;
 
-            if (constructorArgument.Kind != TypedConstantKind.Array)
-                continue;
-
-            foreach (var value in constructorArgument.Values)
+            if (constructorArgument.Kind == TypedConstantKind.Type)
             {
-                if (value.IsNull)
-                    continue;
+                var argument = argumentList.Arguments[i];
 
-                if (value.Value is not INamedTypeSymbol namedTypeSymbolValue)
-                    continue;
+                if (constructorArgument.Value is INamedTypeSymbol namedTypeSymbolValue)
+                    addInterfaceForConstructorParameter(classSymbol, generatorInfo, namedTypeSymbolValue, argument);
+            }
+            else if (constructorArgument.Kind == TypedConstantKind.Array)
+            {
+                if (argumentList.Arguments.Count < constructorArgument.Values.Length)
+                    return;
 
-                if (namedTypeSymbolValue.TypeKind != TypeKind.Interface)
+                for (var j = 0; j < constructorArgument.Values.Length; j++)
                 {
-                    var diagnostic = Diagnostic.Create(DiagnosticDescriptors.GenericAttributeInvalidTypeArgumentType, namedTypeSymbolValue.Locations.First(), namedTypeSymbolValue?.ToDisplayString() ?? "null");
-                    generatorInfo.Diagnostics.Add(diagnostic);
-                    continue;
-                }
+                    var value = constructorArgument.Values[j];
+                    var argument = argumentList.Arguments[j];
 
-                if (!generatorInfo.Interfaces.ContainsKey(namedTypeSymbolValue))
-                {
-                    var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
-                    {
-                        IsInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue),
-                    };
+                    if (value.IsNull)
+                        continue;
 
-                    generatorInfo.Interfaces.Add(namedTypeSymbolValue, interfaceInfo);
+                    if (value.Value is not INamedTypeSymbol namedTypeSymbolValue)
+                        continue;
+
+                    addInterfaceForConstructorParameter(classSymbol, generatorInfo, namedTypeSymbolValue, argument);
                 }
             }
+        }
+    }
+
+    private static void addInterfaceForConstructorParameter(INamedTypeSymbol classSymbol, AutoImplementerGeneratorInfo generatorInfo, INamedTypeSymbol namedTypeSymbolValue, AttributeArgumentSyntax attributeArgument)
+    {
+        if (namedTypeSymbolValue.TypeKind != TypeKind.Interface)
+        {
+            var diagnostic = Diagnostic.Create(DiagnosticDescriptors.GenericAttributeInvalidTypeArgumentType, attributeArgument.GetLocation(), namedTypeSymbolValue?.ToDisplayString() ?? "null");
+            generatorInfo.Diagnostics.Add(diagnostic);
+            return;
+        }
+
+        if (!generatorInfo.Interfaces.ContainsKey(namedTypeSymbolValue))
+        {
+            var isInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue);
+            var interfaceInfo = createAutoImplementerGeneratorInterfaceInfo(namedTypeSymbolValue, isInBaseList);
+
+            generatorInfo.Interfaces.Add(namedTypeSymbolValue, interfaceInfo);
         }
     }
 
@@ -239,23 +270,57 @@ internal static class AutoImplementerGeneratorSelectors
     {
         foreach (var interfaceSymbol in classSymbol.AllInterfaces)
         {
-            var hasAttribute = interfaceSymbol.GetAttributes()
-                .Any(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
-                                  attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace);
+            var attributeData = interfaceSymbol.GetAttributes()
+                .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
+                                    attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
+                .SingleOrDefault();
 
-            if (!hasAttribute)
+            if (attributeData is null)
                 continue;
 
             if (!generatorInfo.Interfaces.ContainsKey(interfaceSymbol))
             {
-                var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
-                {
-                    IsInBaseList = true,
-                };
+                var interfaceInfo = createAutoImplementerGeneratorInterfaceInfo(attributeData, isInBaseList: true);
 
                 generatorInfo.Interfaces.Add(interfaceSymbol, interfaceInfo);
             }
         }
+    }
+
+    private static AutoImplementerGeneratorInterfaceInfo createAutoImplementerGeneratorInterfaceInfo(INamedTypeSymbol interfaceNamedTypeSymbol, bool isInBaseList)
+    {
+        var attributeData = interfaceNamedTypeSymbol.GetAttributes()
+            .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
+                              attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
+            .SingleOrDefault();
+
+        return createAutoImplementerGeneratorInterfaceInfo(attributeData, isInBaseList);
+    }
+
+    private static AutoImplementerGeneratorInterfaceInfo createAutoImplementerGeneratorInterfaceInfo(AttributeData attributeData, bool isInBaseList)
+    {
+        var result = new AutoImplementerGeneratorInterfaceInfo()
+        {
+            IsInBaseList = isInBaseList,
+        };
+
+        if (attributeData is null)
+            return result;
+
+        foreach (var namedArgument in attributeData.NamedArguments)
+        {
+            switch (namedArgument.Key)
+            {
+                case "ImplementAllPropertiesAsRequired":
+                    if (namedArgument.Value.Kind == TypedConstantKind.Primitive && namedArgument.Value.Value is bool isEnabledValue)
+                        result.ImplementAllPropertiesAsRequired = isEnabledValue;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return result;
     }
 
     private static AutoImplementerGeneratorInfo createGeneratorInfo(ClassDeclarationSyntax classDeclaration)
