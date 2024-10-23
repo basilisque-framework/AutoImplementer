@@ -26,7 +26,12 @@ using System.Text;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
 
 public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>>
-{ }
+{
+    protected const string AutoImplementerGeneratorCategory = "AutoImplementerGenerator";
+    protected const string GenericAttributesGeneratorCategory = "GenericAttributesGenerator";
+    protected const string PolyfillsGeneratorCategory = "PolyfillsGenerator";
+    protected const string StaticAttributesGeneratorCategory = "StaticAttributesGenerator";
+}
 
 public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator, TVerifier>
     where TVerifier : IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>, new()

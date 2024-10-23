@@ -20,7 +20,7 @@ using Microsoft.CodeAnalysis.Testing;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.GenericAttributesGenerator;
 
 [TestClass]
-[TestCategory("GenericAttributesGenerator")]
+[TestCategory(GenericAttributesGeneratorCategory)]
 public class GenericClassAttributes_Detection_NoSuffix_NoNamespace : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

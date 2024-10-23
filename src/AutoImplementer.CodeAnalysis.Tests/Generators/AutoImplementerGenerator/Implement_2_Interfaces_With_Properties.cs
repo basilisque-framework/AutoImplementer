@@ -20,7 +20,7 @@ using Microsoft.CodeAnalysis.Testing;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
 [TestClass]
-[TestCategory("AutoImplementerGenerator")]
+[TestCategory(AutoImplementerGeneratorCategory)]
 public class Implement_2_Interfaces_With_Properties : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

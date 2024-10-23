@@ -19,7 +19,7 @@ using Microsoft.CodeAnalysis.Testing;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
 [TestClass]
-[TestCategory("AutoImplementerGenerator")]
+[TestCategory(AutoImplementerGeneratorCategory)]
 public class EmptyInterface_IsNotImplemented : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

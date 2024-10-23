@@ -20,7 +20,7 @@ using Microsoft.CodeAnalysis.Testing;
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.GenericAttributesGenerator;
 
 [TestClass]
-[TestCategory("GenericAttributesGenerator")]
+[TestCategory(GenericAttributesGeneratorCategory)]
 public class Diagnostics_BAS_AUI_001_InvalidGenericArgumentType : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)
