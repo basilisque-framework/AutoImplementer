@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
 
@@ -27,25 +26,34 @@ internal static class AutoImplementerGeneratorOutput
         if (!checkPreconditions(registrationOptions))
             return;
 
+        if (generationInfo.HasDiagnostics)
+        {
+            foreach (var diagnostic in generationInfo.Diagnostics)
+                context.ReportDiagnostic(diagnostic);
+        }
+
+        if (!generationInfo.HasInterfaces)
+            return;
+
         var syntaxNodesToImplement = getSyntaxNodesToImplement(generationInfo.Interfaces);
 
         // skip if nothing to implement
-        if (!syntaxNodesToImplement.Any())
+        if (!syntaxNodesToImplement.Any() && !generationInfo.Interfaces.Any(inf => !inf.Value.IsInBaseList))
             return;
 
-        var classDeclaration = generationInfo.ClassDeclaration;
-
-        var className = classDeclaration.Identifier.Text;
-        var namespaceName = classDeclaration.GetNamespace();
+        var className = generationInfo.ClassName;
+        var namespaceName = generationInfo.ContainingNamespace;
 
         var compilationName = namespaceName is null ? $"{className}.auto_impl" : $"{namespaceName}.{className}.auto_impl";
 
         var ci = registrationOptions.CreateCompilationInfo(compilationName, namespaceName);
         ci.EnableNullableContext = true;
 
-        ci.AddNewClassInfo(className, classDeclaration.GetAccessModifier(), cl =>
+        ci.AddNewClassInfo(className, generationInfo.AccessModifier, cl =>
         {
             cl.IsPartial = true;
+
+            cl.BaseClass = getBaseInterfaces(generationInfo.Interfaces);
 
             foreach (var node in syntaxNodesToImplement)
             {
@@ -70,11 +78,11 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(List<INamedTypeSymbol> interfaces)
+    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> interfaces)
     {
         foreach (var i in interfaces)
         {
-            var members = i.GetMembers();
+            var members = i.Key.GetMembers();
 
             foreach (var member in members)
             {
@@ -99,6 +107,16 @@ internal static class AutoImplementerGeneratorOutput
                 yield return node;
             }
         }
+    }
+
+    private static string? getBaseInterfaces(Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> interfaces)
+    {
+        var baseInterfaces = interfaces.Where(kvp => !kvp.Value.IsInBaseList).Select(kvp => kvp.Key.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)).ToList();
+
+        if (!baseInterfaces.Any())
+            return null;
+
+        return string.Join(", ", baseInterfaces);
     }
 
     private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(IPropertySymbol propertySymbol)

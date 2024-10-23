@@ -14,16 +14,20 @@
    limitations under the License.
 */
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Basilisque.CodeAnalysis.Syntax;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
 internal class AutoImplementerGeneratorInfo
 {
-    private List<INamedTypeSymbol>? _interfaces = null;
+    private Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo>? _interfaces = null;
     private List<Diagnostic>? _diagnostics = null;
 
-    public ClassDeclarationSyntax ClassDeclaration { get; set; }
+    public string ClassName { get; set; }
+
+    public string? ContainingNamespace { get; set; }
+
+    public AccessModifier AccessModifier { get; set; }
 
     public bool HasData
     {
@@ -49,12 +53,12 @@ internal class AutoImplementerGeneratorInfo
         }
     }
 
-    public List<INamedTypeSymbol> Interfaces
+    public Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> Interfaces
     {
         get
         {
             if (_interfaces is null)
-                _interfaces = new List<INamedTypeSymbol>();
+                _interfaces = new Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo>(SymbolEqualityComparer.Default);
 
             return _interfaces;
         }
@@ -71,8 +75,10 @@ internal class AutoImplementerGeneratorInfo
         }
     }
 
-    public AutoImplementerGeneratorInfo(ClassDeclarationSyntax classDeclaration)
+    public AutoImplementerGeneratorInfo(string className, string? containingNamespace, AccessModifier accessModifier)
     {
-        ClassDeclaration = classDeclaration;
+        ClassName = className;
+        ContainingNamespace = containingNamespace;
+        AccessModifier = accessModifier;
     }
 }

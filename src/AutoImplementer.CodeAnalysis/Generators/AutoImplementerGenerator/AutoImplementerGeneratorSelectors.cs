@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGenerator;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -32,7 +33,7 @@ internal static class AutoImplementerGeneratorSelectors
             predicate: isClassToAutoImplementCandidate,
             transform: transformClassCandidates
             )
-        .Where(static gi => gi is not null);
+        .Where(static gi => gi?.HasData == true);
 
         return classDeclarations!;
     }
@@ -158,7 +159,7 @@ internal static class AutoImplementerGeneratorSelectors
             else
                 continue;
 
-            autoImplementerGeneratorInfo = autoImplementerGeneratorInfo ?? new AutoImplementerGeneratorInfo(classDeclaration);
+            autoImplementerGeneratorInfo = autoImplementerGeneratorInfo ?? createGeneratorInfo(classDeclaration);
 
             action(classSymbol, classAttribute, autoImplementerGeneratorInfo);
         }
@@ -172,16 +173,27 @@ internal static class AutoImplementerGeneratorSelectors
         {
             if (typeArgument.TypeKind != TypeKind.Interface)
             {
-                var diagnostic = Diagnostic.Create(DiagnosticDescriptors.GenericAttributeInvalidTypeArgumentType, typeArgument.Locations.First(), typeArgument?.ToDisplayString() ?? "null");
-                generatorInfo.Diagnostics.Add(diagnostic);
+                // type is not an interface, so skip it
+                // do not report this as diagnostic because it is already reported by the GenericAttributesGenerator
+
+                //var diagnostic = Diagnostic.Create(DiagnosticDescriptors.GenericAttributeInvalidTypeArgumentType, typeArgument.Locations.First(), typeArgument?.ToDisplayString() ?? "null");
+                //generatorInfo.Diagnostics.Add(diagnostic);
+
                 continue;
             }
 
             if (typeArgument is not INamedTypeSymbol namedTypeSymbolValue)
                 continue;
 
-            if (!generatorInfo.Interfaces.Contains(namedTypeSymbolValue))
-                generatorInfo.Interfaces.Add(namedTypeSymbolValue);
+            if (!generatorInfo.Interfaces.ContainsKey(namedTypeSymbolValue))
+            {
+                var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
+                {
+                    IsInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue),
+                };
+
+                generatorInfo.Interfaces.Add(namedTypeSymbolValue, interfaceInfo);
+            }
         }
     }
 
@@ -210,8 +222,15 @@ internal static class AutoImplementerGeneratorSelectors
                     continue;
                 }
 
-                if (!generatorInfo.Interfaces.Contains(namedTypeSymbolValue))
-                    generatorInfo.Interfaces.Add(namedTypeSymbolValue);
+                if (!generatorInfo.Interfaces.ContainsKey(namedTypeSymbolValue))
+                {
+                    var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
+                    {
+                        IsInBaseList = classSymbol.AllInterfaces.Contains(namedTypeSymbolValue),
+                    };
+
+                    generatorInfo.Interfaces.Add(namedTypeSymbolValue, interfaceInfo);
+                }
             }
         }
     }
@@ -227,8 +246,24 @@ internal static class AutoImplementerGeneratorSelectors
             if (!hasAttribute)
                 continue;
 
-            if (!generatorInfo.Interfaces.Contains(interfaceSymbol))
-                generatorInfo.Interfaces.Add(interfaceSymbol);
+            if (!generatorInfo.Interfaces.ContainsKey(interfaceSymbol))
+            {
+                var interfaceInfo = new AutoImplementerGeneratorInterfaceInfo()
+                {
+                    IsInBaseList = true,
+                };
+
+                generatorInfo.Interfaces.Add(interfaceSymbol, interfaceInfo);
+            }
         }
+    }
+
+    private static AutoImplementerGeneratorInfo createGeneratorInfo(ClassDeclarationSyntax classDeclaration)
+    {
+        var className = classDeclaration.Identifier.Text;
+        var namespaceName = classDeclaration.GetNamespace();
+        var accessModifier = Basilisque.CodeAnalysis.Syntax.AccessModifierExtensions.GetAccessModifier(classDeclaration);
+
+        return new AutoImplementerGeneratorInfo(className, namespaceName, accessModifier);
     }
 }
