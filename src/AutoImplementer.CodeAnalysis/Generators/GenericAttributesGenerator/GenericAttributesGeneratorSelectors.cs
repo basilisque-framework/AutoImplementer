@@ -49,10 +49,10 @@ internal static class GenericAttributesGeneratorSelectors
 
     private static bool isAttributeListRelevant(AttributeListSyntax attributeList)
     {
-        return attributeList.Attributes.Any(isAttributeRelevant);
+        return attributeList.Attributes.Any(IsAttributeRelevant);
     }
 
-    private static bool isAttributeRelevant(AttributeSyntax attribute)
+    internal static bool IsAttributeRelevant(AttributeSyntax attribute)
     {
         return isAttributeRelevant(attribute, out var _);
     }
@@ -112,6 +112,8 @@ internal static class GenericAttributesGeneratorSelectors
         {
             foreach (var attribute in attributeList.Attributes)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (!isAttributeRelevant(attribute, out var genericName))
                     continue;
 

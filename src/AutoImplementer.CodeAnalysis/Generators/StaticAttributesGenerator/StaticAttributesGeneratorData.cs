@@ -73,6 +73,9 @@ namespace {AutoImplementedAttributesTargetNamespace}
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     internal class {AutoImplementClassInterfacesAttributeClassName} : Attribute
     {{
+        public {AutoImplementClassInterfacesAttributeClassName}(params Type[] interfacesToImplement)
+        {{
+        }}
     }}
 }}";
 

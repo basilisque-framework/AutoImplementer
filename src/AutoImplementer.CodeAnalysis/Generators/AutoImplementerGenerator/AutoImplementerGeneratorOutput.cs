@@ -17,17 +17,19 @@
 using Basilisque.AutoImplementer.CodeAnalysis.Extensions;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
 internal static class AutoImplementerGeneratorOutput
 {
-    internal static void OutputImplementations(SourceProductionContext context, (ClassDeclarationSyntax ClassToGenerate, ImmutableArray<INamedTypeSymbol> Interfaces) generationInfo, RegistrationOptions registrationOptions)
+    internal static void OutputImplementations(SourceProductionContext context, AutoImplementerGeneratorInfo? autoImplementerGeneratorInfo, RegistrationOptions registrationOptions)
     {
         if (!checkPreconditions(registrationOptions))
             return;
+
+        //autoImplementerGeneratorInfo is never null. This is already checked in the selector
+        var generationInfo = autoImplementerGeneratorInfo!.Value;
 
         var syntaxNodesToImplement = getSyntaxNodesToImplement(generationInfo.Interfaces);
 
@@ -35,7 +37,7 @@ internal static class AutoImplementerGeneratorOutput
         if (!syntaxNodesToImplement.Any())
             return;
 
-        var classDeclaration = generationInfo.ClassToGenerate;
+        var classDeclaration = generationInfo.Node;
 
         var className = classDeclaration.Identifier.Text;
         var namespaceName = classDeclaration.GetNamespace();
