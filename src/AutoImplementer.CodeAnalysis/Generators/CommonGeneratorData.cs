@@ -61,4 +61,9 @@ using System;";
     public static readonly string GeneratedClassSharedAttributes = $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{CommonGeneratorData.AssemblyName.Name}"", ""{CommonGeneratorData.AssemblyName.Version}"")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]";
+
+    /// <summary>
+    /// Provides the attributes that are output for each class as a string (not indented)
+    /// </summary>
+    public static readonly string GeneratedClassSharedAttributesNotIndented = GeneratedClassSharedAttributes.Replace("    [", "[");
 }

@@ -79,23 +79,22 @@ public partial class MyImplementation : IMyInterface
         yield return (
             Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired;
+
+{CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
+public partial class MyImplementation
 {{
-    {CommonGeneratorData.GeneratedClassSharedAttributes}
-    public partial class MyImplementation
-    {{
-        /// <inheritdoc />
-        public required int IntNotRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public required int IntRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public required string StringNotRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public required string StringRequired {{ get; set; }}
-    }}
+    /// <inheritdoc />
+    public required int IntNotRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required int IntRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required string StringNotRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required string StringRequired {{ get; set; }}
 }}
 
 #nullable restore");

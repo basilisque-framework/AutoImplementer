@@ -93,29 +93,28 @@ public partial class MyImplementation : IMyInterface
         yield return (
             Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties;
+
+{CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
+public partial class MyImplementation
 {{
-    {CommonGeneratorData.GeneratedClassSharedAttributes}
-    public partial class MyImplementation
-    {{
-        /// <inheritdoc />
-        public int? IntWithQuestionMark {{ get; set; }}
-        
-        /// <inheritdoc />
-        public int? IntWithNullable {{ get; set; }}
-        
-        /// <inheritdoc />
-        public bool? BoolWithQuestionMark {{ get; set; }}
-        
-        /// <inheritdoc />
-        public bool? BoolWithNullable {{ get; set; }}
-        
-        /// <inheritdoc />
-        public string? StringWithQuestionMark {{ get; set; }}
-        
-        /// <inheritdoc />
-        public global::AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyTestClass? MyTestClassWithQuestionMark {{ get; set; }}
-    }}
+    /// <inheritdoc />
+    public int? IntWithQuestionMark {{ get; set; }}
+    
+    /// <inheritdoc />
+    public int? IntWithNullable {{ get; set; }}
+    
+    /// <inheritdoc />
+    public bool? BoolWithQuestionMark {{ get; set; }}
+    
+    /// <inheritdoc />
+    public bool? BoolWithNullable {{ get; set; }}
+    
+    /// <inheritdoc />
+    public string? StringWithQuestionMark {{ get; set; }}
+    
+    /// <inheritdoc />
+    public global::AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Nullable_Properties.MyTestClass? MyTestClassWithQuestionMark {{ get; set; }}
 }}
 
 #nullable restore");

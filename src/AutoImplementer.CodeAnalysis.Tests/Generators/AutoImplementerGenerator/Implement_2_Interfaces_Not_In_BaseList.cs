@@ -104,20 +104,19 @@ namespace Basilisque.AutoImplementer.Annotations
         yield return (
                 Name: "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList.Movie.auto_impl.g.cs",
                 SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList
+namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList;
+
+{CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
+public partial class Movie : global::AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList.ITitle, global::AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList.IDetails
 {{
-    {CommonGeneratorData.GeneratedClassSharedAttributes}
-    public partial class Movie : global::AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList.ITitle, global::AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Not_In_BaseList.IDetails
-    {{
-        /// <inheritdoc />
-        public string? Title {{ get; set; }}
-        
-        /// <inheritdoc />
-        public byte[]? Image {{ get; set; }}
-        
-        /// <inheritdoc />
-        public string? Summary {{ get; set; }}
-    }}
+    /// <inheritdoc />
+    public string? Title {{ get; set; }}
+    
+    /// <inheritdoc />
+    public byte[]? Image {{ get; set; }}
+    
+    /// <inheritdoc />
+    public string? Summary {{ get; set; }}
 }}
 
 #nullable restore");

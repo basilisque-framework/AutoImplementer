@@ -135,37 +135,16 @@ internal static class AutoImplementerGeneratorOutput
                 fqtn += "?";
         }
 
-        if (info.ImplementAllPropertiesAsRequired || propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
-            fqtn = "required " + fqtn;
-
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
 
+        //pi.Attributes
+
+        if (info.ImplementAllPropertiesAsRequired || propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
+            pi.IsRequired = true;
+
         pi.InheritXmlDoc = true;
-        pi.AccessModifier = mapAccessibility(propertySymbol.DeclaredAccessibility);
+        pi.AccessModifier = propertySymbol.DeclaredAccessibility.ToAccessModifier();
 
         return pi;
-    }
-
-    private static AccessModifier mapAccessibility(Accessibility declaredAccessibility)
-    {
-        switch (declaredAccessibility)
-        {
-            case Accessibility.NotApplicable:
-                return AccessModifier.Public;
-            case Accessibility.Private:
-                return AccessModifier.Private;
-            case Accessibility.ProtectedAndInternal:
-                return AccessModifier.ProtectedInternal;
-            case Accessibility.Protected:
-                return AccessModifier.Protected;
-            case Accessibility.Internal:
-                return AccessModifier.Internal;
-            case Accessibility.ProtectedOrInternal:
-                return AccessModifier.ProtectedInternal;
-            case Accessibility.Public:
-                return AccessModifier.Public;
-            default:
-                return AccessModifier.Public;
-        }
     }
 }

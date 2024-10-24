@@ -79,23 +79,22 @@ public partial class MyImplementation : IMyInterface
         yield return (
             Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties;
+
+{CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
+public partial class MyImplementation
 {{
-    {CommonGeneratorData.GeneratedClassSharedAttributes}
-    public partial class MyImplementation
-    {{
-        /// <inheritdoc />
-        public int IntNotRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public required int IntRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public string StringNotRequired {{ get; set; }}
-        
-        /// <inheritdoc />
-        public required string StringRequired {{ get; set; }}
-    }}
+    /// <inheritdoc />
+    public int IntNotRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required int IntRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public string StringNotRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required string StringRequired {{ get; set; }}
 }}
 
 #nullable restore");
@@ -106,8 +105,8 @@ namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Propertie
         // There should be exactly one warning CS8618 stating that 'StringNotRequired' must contain a non-null value when exiting constructor.
         // The 'IntNotRequired' property doesn't raise this warning and the other two properties are marked as required.
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40)
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 23, 27, 40);
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36)
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36);
     }
 }
 

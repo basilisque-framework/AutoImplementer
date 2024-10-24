@@ -84,20 +84,19 @@ public partial class Movie : ITitle, IDetails
         yield return (
             Name: "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties
+namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties;
+
+{CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
+public partial class Movie
 {{
-    {CommonGeneratorData.GeneratedClassSharedAttributes}
-    public partial class Movie
-    {{
-        /// <inheritdoc />
-        public string Title {{ get; set; }}
-        
-        /// <inheritdoc />
-        public byte[]? Image {{ get; set; }}
-        
-        /// <inheritdoc />
-        public string? Summary {{ get; set; }}
-    }}
+    /// <inheritdoc />
+    public string Title {{ get; set; }}
+    
+    /// <inheritdoc />
+    public byte[]? Image {{ get; set; }}
+    
+    /// <inheritdoc />
+    public string? Summary {{ get; set; }}
 }}
 
 #nullable restore");
@@ -107,8 +106,8 @@ namespace AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties
     {
         // Expect warning "Non-nullable property 'Title' must contain a non-null value when exiting constructor. Consider declaring the property as nullable."
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 23, 21, 28)
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 23, 21, 28);
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24)
+            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24);
     }
 }
 
