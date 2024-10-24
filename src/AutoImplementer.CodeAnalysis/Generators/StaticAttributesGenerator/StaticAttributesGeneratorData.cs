@@ -89,6 +89,11 @@ namespace {AutoImplementedAttributesTargetNamespace}
         /// Determines if the member should be automatically implemented or not
         /// </summary>
         public bool Implement {{ get; set; }} = true;
+
+        /// <summary>
+        /// Determines if the property should be implemented with the required modifier
+        /// </summary>
+        public bool AsRequired {{ get; set; }} = false;
     }}
 }}";
 

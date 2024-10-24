@@ -58,6 +58,18 @@ public interface IMyInterface
     /// string required
     /// </summary>
     [Required] string StringRequired { get; set; }
+
+    /// <summary>
+    /// string required by AutoImplementAttribute
+    /// </summary>
+    [Basilisque.AutoImplementer.Annotations.AutoImplement(AsRequired = true)]
+    int IntRequiredByAutoImplementAttribute { get; set; }
+
+    /// <summary>
+    /// string not required by AutoImplementAttribute
+    /// </summary>
+    [Basilisque.AutoImplementer.Annotations.AutoImplement(AsRequired = false)]
+    int IntNotRequiredByAutoImplementAttribute { get; set; }
 }
 ");
 
@@ -95,6 +107,12 @@ public partial class MyImplementation
     
     /// <inheritdoc />
     public required string StringRequired {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required int IntRequiredByAutoImplementAttribute {{ get; set; }}
+    
+    /// <inheritdoc />
+    public int IntNotRequiredByAutoImplementAttribute {{ get; set; }}
 }}
 
 #nullable restore");

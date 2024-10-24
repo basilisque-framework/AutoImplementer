@@ -16,6 +16,7 @@
 
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
+using MemberTypes = System.Reflection.MemberTypes;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGenerator;
 
@@ -35,7 +36,7 @@ internal static class AutoImplementerGeneratorOutput
         if (!generationInfo.HasInterfaces)
             return;
 
-        var syntaxNodesToImplement = getSyntaxNodesToImplement(generationInfo.Interfaces);
+        var syntaxNodesToImplement = getSyntaxNodesToImplement(context, generationInfo.Interfaces);
 
         // skip if nothing to implement
         if (!syntaxNodesToImplement.Any() && !generationInfo.Interfaces.Any(inf => !inf.Value.IsInBaseList))
@@ -78,7 +79,7 @@ internal static class AutoImplementerGeneratorOutput
         return true;
     }
 
-    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> interfaces)
+    private static IEnumerable<Basilisque.CodeAnalysis.Syntax.SyntaxNode> getSyntaxNodesToImplement(SourceProductionContext context, Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> interfaces)
     {
         foreach (var i in interfaces)
         {
@@ -86,12 +87,16 @@ internal static class AutoImplementerGeneratorOutput
 
             foreach (var member in members)
             {
+                var autoImplementAttribute = getAutoImplementAttribute(member);
+                if (shouldIgnoreProperty(autoImplementAttribute))
+                    continue;
+
                 Basilisque.CodeAnalysis.Syntax.SyntaxNode? node;
 
                 switch (member)
                 {
                     case IPropertySymbol propertySymbol:
-                        node = implementProperty(propertySymbol, i.Value);
+                        node = implementProperty(context, propertySymbol, i.Value, autoImplementAttribute);
                         break;
                     //case IMethodSymbol methodSymbol:
                     //    yield return implementMethod(methodSymbol);
@@ -119,13 +124,15 @@ internal static class AutoImplementerGeneratorOutput
         return string.Join(", ", baseInterfaces);
     }
 
-    private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(IPropertySymbol propertySymbol, AutoImplementerGeneratorInterfaceInfo info)
+    private static Basilisque.CodeAnalysis.Syntax.PropertyInfo? implementProperty(SourceProductionContext context, IPropertySymbol propertySymbol, AutoImplementerGeneratorInterfaceInfo info, AttributeData? autoImplementAttribute)
     {
         // get the full qualified type name of the property
         var fqtn = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
         if (string.IsNullOrWhiteSpace(fqtn))
             return null;
+
+        getMemberAttributeInfo(autoImplementAttribute, MemberTypes.Property, context, out var implementPropertyAsRequired);
 
         // check if the property is nullable
         if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
@@ -139,13 +146,80 @@ internal static class AutoImplementerGeneratorOutput
 
         copyAttributes(propertySymbol, pi, out var propertyHasRequiredAttribute);
 
-        if (propertyHasRequiredAttribute || info.ImplementAllPropertiesAsRequired)
+        if (implementPropertyAsRequired || propertyHasRequiredAttribute || info.ImplementAllPropertiesAsRequired)
             pi.IsRequired = true;
 
         pi.InheritXmlDoc = true;
         pi.AccessModifier = propertySymbol.DeclaredAccessibility.ToAccessModifier();
 
         return pi;
+    }
+
+    private static void getMemberAttributeInfo(AttributeData? autoImplementAttribute, MemberTypes memberType, SourceProductionContext context, out bool implementPropertyAsRequired)
+    {
+        implementPropertyAsRequired = false;
+
+        if (autoImplementAttribute is null)
+            return;
+
+        foreach (var namedArgument in autoImplementAttribute.NamedArguments)
+        {
+            switch (namedArgument.Key)
+            {
+                case "AsRequired":
+                    if (asRequiredAttributeIsValidOnMemberType(memberType, autoImplementAttribute, context)
+                        && namedArgument.Value.Kind == TypedConstantKind.Primitive
+                        && namedArgument.Value.Value is bool asRequired)
+                    {
+                        implementPropertyAsRequired = asRequired;
+                    }
+                    break;
+
+                case "Implement": //this was already handled earlier
+                default:
+                    continue;
+            }
+        }
+    }
+
+    private static bool asRequiredAttributeIsValidOnMemberType(MemberTypes memberType, AttributeData autoImplementAttribute, SourceProductionContext context)
+    {
+        if (memberType == MemberTypes.Property /*|| memberType == MemberTypes.Field*/) // Required modifier would be valid for fields, too. But interfaces can't define fields.
+            return true;
+
+        var syntaxNode = autoImplementAttribute.ApplicationSyntaxReference?.GetSyntax() as Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax;
+
+        var arg = syntaxNode?.ArgumentList?.Arguments.FirstOrDefault(arg => arg.NameColon?.Name.ToString() == "AsRequired");
+
+        if (arg is not null)
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MemberAttributePropertyAsRequiredOnInvalidMemberType, arg.GetLocation()));
+
+        return false;
+    }
+
+    private static AttributeData? getAutoImplementAttribute(ISymbol memberSymbol)
+    {
+        return memberSymbol.GetAttributes().SingleOrDefault(a =>
+                    a.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementOnMembersAttributeClassName
+                    && a.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace);
+    }
+
+    private static bool shouldIgnoreProperty(AttributeData? autoImplementAttribute)
+    {
+        if (autoImplementAttribute is null)
+            return false;
+
+        foreach (var namedArgument in autoImplementAttribute.NamedArguments)
+        {
+            if (namedArgument.Key == "Implement"
+                && namedArgument.Value.Kind == TypedConstantKind.Primitive
+                && namedArgument.Value.Value is bool shouldImplement)
+            {
+                return !shouldImplement;
+            }
+        }
+
+        return false;
     }
 
     private static void copyAttributes(IPropertySymbol propertySymbol, PropertyInfo pi, out bool propertyHasRequiredAttribute)
@@ -156,13 +230,18 @@ internal static class AutoImplementerGeneratorOutput
 
         foreach (var attribute in attributes)
         {
-            if (attribute.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName
-                && attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
+            if (attribute.AttributeClass?.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
             {
-                propertyHasRequiredAttribute = true;
+                if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName)
+                {
+                    propertyHasRequiredAttribute = true;
 
-                // do not copy the basilisque internal attribute
-                continue;
+                    // do not copy the basilisque internal attribute
+                    continue;
+                }
+                else if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.AutoImplementOnMembersAttributeClassName)
+                    // do not copy the basilisque internal attribute
+                    continue;
             }
 
             pi.Attributes.Add(new AttributeInfo(attribute.ToString()));

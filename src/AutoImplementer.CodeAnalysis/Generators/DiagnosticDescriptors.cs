@@ -19,4 +19,5 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators;
 internal static class DiagnosticDescriptors
 {
     public static DiagnosticDescriptor GenericAttributeInvalidTypeArgumentType { get { return new DiagnosticDescriptor("BAS_AUI_001", "Invalid type argument.", "The type '{0}' cannot be automatically implemented, because it is not an interface.", "Basilisque.AutoImplementer", DiagnosticSeverity.Error, true); } }
+    public static DiagnosticDescriptor MemberAttributePropertyAsRequiredOnInvalidMemberType { get { return new DiagnosticDescriptor("BAS_AUI_002", "Invalid attribute usage.", "Setting 'AsRequired' is only valid on properties.", "Basilisque.AutoImplementer", DiagnosticSeverity.Error, true); } }
 }
