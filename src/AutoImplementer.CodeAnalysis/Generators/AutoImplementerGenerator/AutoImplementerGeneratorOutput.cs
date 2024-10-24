@@ -137,14 +137,35 @@ internal static class AutoImplementerGeneratorOutput
 
         var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
 
-        //pi.Attributes
+        copyAttributes(propertySymbol, pi, out var propertyHasRequiredAttribute);
 
-        if (info.ImplementAllPropertiesAsRequired || propertySymbol.GetAttributes().Any(a => a.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName))
+        if (propertyHasRequiredAttribute || info.ImplementAllPropertiesAsRequired)
             pi.IsRequired = true;
 
         pi.InheritXmlDoc = true;
         pi.AccessModifier = propertySymbol.DeclaredAccessibility.ToAccessModifier();
 
         return pi;
+    }
+
+    private static void copyAttributes(IPropertySymbol propertySymbol, PropertyInfo pi, out bool propertyHasRequiredAttribute)
+    {
+        propertyHasRequiredAttribute = false;
+
+        var attributes = propertySymbol.GetAttributes();
+
+        foreach (var attribute in attributes)
+        {
+            if (attribute.AttributeClass?.Name == StaticAttributesGeneratorData.ImplementAsRequiredAttributeClassName
+                && attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
+            {
+                propertyHasRequiredAttribute = true;
+
+                // do not copy the basilisque internal attribute
+                continue;
+            }
+
+            pi.Attributes.Add(new AttributeInfo(attribute.ToString()));
+        }
     }
 }
