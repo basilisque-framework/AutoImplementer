@@ -33,34 +33,125 @@ Now you're ready to [start implementing your interfaces automatically](https://g
 
 
 ## Features
+### General
+- Automatic implementation of interfaces on classes
+- Classes have to be marked with the `[AutoImplementInterfaces]` attribute
+  - Then all interfaces marked with the `[AutoImplementInterface]` attribute will be implemented
+    ```csharp
+    [AutoImplementInterface]
+    public interface ITitle
+    {
+      string Title { get; set; }
+    }
+
+    public interface ISummary
+    {
+      string Summary { get; set; }
+    }
+
+    [AutoImplementInterfaces]
+    public partial class Book : ITitle, ISummary
+    { /* will have the property 'Title' only. 'ISummary' is not marked with an attribute */ }
+    ```
+  - By specifying the interfaces explicitly within the attribute on the class, the interfaces dont't have to be marked  
+    (`[AutoImplementInterfaces<IInterface>()]` or `[AutoImplementInterfaces(typeof(IInterface))]`)
+    ```csharp
+    public interface ITitle
+    {
+      string Title { get; set; }
+    }
+
+    public interface ISummary
+    {
+      string Summary { get; set; }
+    }
+
+    [AutoImplementInterfaces<ITitle, ISummary>()]
+    //[AutoImplementInterfaces(typeof(ITitle), typeof(ISummary))] <- alternative syntax
+    public partial class Book : ITitle, ISummary
+    { /* will have the properties 'Title' and 'Summary' */ }
+    ```
+  
+- When the interfaces are explicitly stated, they don't have to be stated as base type a second time. This is valid:
+  ```csharp
+  public interface ITitle
+  {
+    string Title { get; set; }
+  }
+
+  [AutoImplementInterfaces<ITitle>()]
+  //[AutoImplementInterfaces(typeof(ITitle))] <- alternative syntax
+  public partial class Book // ': ITitle' <- this is optional because 'ITitle' was specified in the attribute
+  { }
+  ```
+
+### Property Implementation
 - Properties of interfaces will be added as auto-implemented properties
+- Either single properties or the whole interface can be marked to implement the properties as `required`.
+  ```csharp
+  public interface IBook
+  {
+    [Required] string Title { get; set; } // implements 'Title' as 'required'
+    
+    DateOnly PublishDate { get; set; }    // not required
+
+    [AutoImplement(AsRequired = true)]    // implements 'Publisher' as 'required'
+    string Publisher { get; set; }
+  }
+
+  [AutoImplementInterface(ImplementAllPropertiesAsRequired = true)] // implements all properties of 'IMovie' as 'required'
+  public interface IMovie
+  {
+    string Title { get; set; }
+    
+    string Summary { get; set; }
+  }
+  ```
+- Properties can be skipped. Then they have to be implemented manually.
+  ```csharp
+  public interface IPublish
+  {
+    DateOnly PublishDate { get; set; }
+
+    [AutoImplement(Implement = false)] // skips the 'Publisher' property
+    string? Publisher { get; set; }
+  }
+  ```
 
 ## Examples
 Create the interfaces:
 ```csharp
-[AutoImplementInterface()]
+[AutoImplementInterface]
 public interface ITitle
 {
-  [Required] string Title { get; set; } // implements 'Title' as 'required' in .NET 7.0+
+  [Required] string Title { get; set; }
 }
 
-[AutoImplementInterface()]
 public interface IDetails
 {
-  byte[]? Image { get; set; }
-  string Summary { get; set; }
+  byte[]? Image { get; set; }  
+  string Summary { get; set; }  
 }
 ```
+
 Create some classes implementing the interfaces:
 ```csharp
+[AutoImplementInterfaces()] // <- no interfaces were stated explicitly. 'ITitle' will be implemented because it is marked with the 'AutoImplementInterface' attribute
 public partial class Book : ITitle, IDetails
-{ /* will have the properties Title, Image and Summary */ }
+{ /* will have the properties Title only */ }
 
+[AutoImplementInterfaces<IDetails>()] // <- 'IDetails' was stated explicitly; only this interface will be implemented
 public partial class Movie : ITitle, IDetails
+{ /* will have the properties Image and Summary */ }
+
+[AutoImplementInterfaces<IDetails>()] // <- will implement 'IDetails'
+[AutoImplementInterfaces()]           // <- will find 'ITitle' because it is marked with the 'AutoImplementInterface' attribute
+public partial class Game : ITitle, IDetails
 { /* will have the properties Title, Image and Summary */ }
 
-public partial class Song: ITitle
-{ /* will have the property Title */ }
+[AutoImplementInterfaces(typeof(ITitle), typeof(IDetails))]
+public partial class Event
+{ /* will have the properties Title, Image and Summary */ }
 ```
 
 The source generator now adds the members to the corresponding classes without you having to do this on your own every time.
