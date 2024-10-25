@@ -268,7 +268,7 @@ internal static class AutoImplementerGeneratorSelectors
 
     private static void addInterfacesFromBaseTypes(INamedTypeSymbol classSymbol, AttributeData classAttribute, AutoImplementerGeneratorInfo generatorInfo)
     {
-        foreach (var interfaceSymbol in classSymbol.AllInterfaces)
+        foreach (var interfaceSymbol in classSymbol.Interfaces)
         {
             var attributeData = interfaceSymbol.GetAttributes()
                 .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
