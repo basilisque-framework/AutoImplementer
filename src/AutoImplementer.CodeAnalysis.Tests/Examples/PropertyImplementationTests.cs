@@ -18,12 +18,10 @@ using Basilisque.AutoImplementer.Annotations;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Examples;
 
-/* Define the interfaces that should be automatically implemented */
-
 [AutoImplementInterface()]
 public interface ITitle
 {
-    string Title { get; set; }
+    [Required] string Title { get; set; }
 }
 
 [AutoImplementInterface()]

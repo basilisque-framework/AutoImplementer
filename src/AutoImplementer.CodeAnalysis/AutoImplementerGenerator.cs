@@ -19,6 +19,7 @@ using Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGenera
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
 using Basilisque.CodeAnalysis.Syntax;
+using System.Diagnostics;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis;
 

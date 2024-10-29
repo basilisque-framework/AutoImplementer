@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Immutable;
 using static Basilisque.AutoImplementer.CodeAnalysis.Generators.CommonGeneratorData;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
@@ -23,20 +24,35 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGen
 /// </summary>
 public static class StaticAttributesGeneratorData
 {
-    internal const string AutoImplementInterfaceAttributeClassName = "AutoImplementInterfaceAttribute";
+    internal const string AutoImplementInterfaceAttributeClassName       = "AutoImplementInterfaceAttribute";
+
     internal const string AutoImplementClassInterfacesAttributeClassName = "AutoImplementInterfacesAttribute";
+
     internal const string AutoImplementOnMembersAttributeClassName = "AutoImplementAttribute";
-    internal const string ImplementAsRequiredAttributeClassName = "RequiredAttribute";
+        internal const string AutoImplementOnMembersClass_Implement    = "Implement";
+        internal const string AutoImplementOnMembersClass_AsRequired   = "AsRequired";
 
-    internal const string AutoImplementInterfaceAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
+    internal const string RequirednessEnumName          = "RequiredImplementationStrategy";
+    internal static readonly ImmutableList<string> RequirednessEnums = new List<string> {
+        "None",
+        "NonNullable",
+        "All"
+    }.ToImmutableList();
+
+    internal const string RequiredAttributeClassName = "RequiredAttribute";
+
+
+    internal const string AutoImplementInterfaceAttributeFullName       = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementInterfaceAttributeClassName}";
     internal const string AutoImplementClassInterfacesAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementClassInterfacesAttributeClassName}";
-    internal const string AutoImplementOnMembersAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
-    internal const string ImplementAsRequiredAttributeFullName = $"{AutoImplementedAttributesTargetNamespace}.{ImplementAsRequiredAttributeClassName}";
+    internal const string AutoImplementOnMembersAttributeFullName       = $"{AutoImplementedAttributesTargetNamespace}.{AutoImplementOnMembersAttributeClassName}";
+    internal const string ImplementAsRequiredAttributeFullName          = $"{AutoImplementedAttributesTargetNamespace}.{RequiredAttributeClassName}";
+    internal const string RequirednessEnumFullName                      = $"{AutoImplementedAttributesTargetNamespace}.{RequirednessEnumName}";
 
-    private const string AutoImplementInterfaceAttributeCompilationName = $"{AutoImplementInterfaceAttributeFullName}.g";
+    private const string AutoImplementInterfaceAttributeCompilationName       = $"{AutoImplementInterfaceAttributeFullName}.g";
     private const string AutoImplementClassInterfacesAttributeCompilationName = $"{AutoImplementClassInterfacesAttributeFullName}.g";
-    private const string AutoImplementOnMembersAttributeCompilationName = $"{AutoImplementOnMembersAttributeFullName}.g";
-    private const string ImplementAsRequiredAttributeCompilationName = $"{ImplementAsRequiredAttributeFullName}.g";
+    private const string AutoImplementOnMembersAttributeCompilationName       = $"{AutoImplementOnMembersAttributeFullName}.g";
+    private const string ImplementAsRequiredAttributeCompilationName          = $"{ImplementAsRequiredAttributeFullName}.g";
+    private const string RequirednessEnumCompilationName                      = $"{RequirednessEnumName}.g";
 
     private static readonly string _autoImplementInterfaceAttributeSource =
     @$"{GeneratedFileSharedHeaderWithUsings}
@@ -50,11 +66,17 @@ namespace {AutoImplementedAttributesTargetNamespace}
     internal sealed class {AutoImplementInterfaceAttributeClassName} : Attribute
     {{
         /// <summary>
-        /// Determines if all properties of the interface should be implemented with the 'required' keyword.
+        /// Determines which properties should be implemented with the 'required' modifier, if any.
         /// </summary>
-        public bool ImplementAllPropertiesAsRequired {{ get; set; }} = false;
+        public {RequirednessEnumName} {RequirednessEnumName} {{ get; set; }} = {RequirednessEnumName}.{RequirednessEnum_None};
     }}
-}}";
+
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{CommonGeneratorData.AssemblyName.Name}"", ""{CommonGeneratorData.AssemblyName.Version}"")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    /// <summary>
+    /// <inheritdoc cref=""{AutoImplementInterfaceAttributeClassName}.{RequirednessEnumName}"">
+    /// </summary>
+    internal enum {RequirednessEnumName} {{ {string.Join($", ", RequirednessEnums)} }}";
 
     private static readonly string _autoImplementClassInterfacesAttributeSource =
     @$"{GeneratedFileSharedHeaderWithUsings}
@@ -106,7 +128,7 @@ namespace {AutoImplementedAttributesTargetNamespace}
     /// </summary>
     {GeneratedClassSharedAttributes}
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    internal sealed class {ImplementAsRequiredAttributeClassName} : Attribute
+    internal sealed class {RequiredAttributeClassName} : Attribute
     {{
     }}
 }}";
@@ -119,6 +141,6 @@ namespace {AutoImplementedAttributesTargetNamespace}
         { AutoImplementInterfaceAttributeFullName, (AutoImplementInterfaceAttributeCompilationName, _autoImplementInterfaceAttributeSource) },
         { AutoImplementClassInterfacesAttributeFullName, (AutoImplementClassInterfacesAttributeCompilationName, _autoImplementClassInterfacesAttributeSource) },
         { AutoImplementOnMembersAttributeFullName, (AutoImplementOnMembersAttributeCompilationName, _autoImplementOnMembersAttributeSource) },
-        { ImplementAsRequiredAttributeFullName, (ImplementAsRequiredAttributeCompilationName, _implementAsRequiredAttributeSource) },
+        { ImplementAsRequiredAttributeFullName, (ImplementAsRequiredAttributeCompilationName, _implementAsRequiredAttributeSource) }
     };
 }

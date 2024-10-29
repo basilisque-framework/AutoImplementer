@@ -297,6 +297,7 @@ internal static class AutoImplementerGeneratorSelectors
         return createAutoImplementerGeneratorInterfaceInfo(attributeData, isInBaseList);
     }
 
+    // TODO: Convert 'ImplementAllPropertiesAsRequired' to use enum
     private static AutoImplementerGeneratorInterfaceInfo createAutoImplementerGeneratorInterfaceInfo(AttributeData attributeData, bool isInBaseList)
     {
         var result = new AutoImplementerGeneratorInterfaceInfo()
