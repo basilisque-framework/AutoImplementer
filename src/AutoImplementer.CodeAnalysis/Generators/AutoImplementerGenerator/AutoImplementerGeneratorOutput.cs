@@ -130,6 +130,8 @@ internal static class AutoImplementerGeneratorOutput
         // get the full qualified type name of the property
         var fqtn = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
+        bool nullable = false;
+
         if (string.IsNullOrWhiteSpace(fqtn))
             return null;
 
@@ -138,6 +140,7 @@ internal static class AutoImplementerGeneratorOutput
         // check if the property is nullable
         if (propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
         {
+            nullable = true;
             // check if the type is a value type and not already a nullable type
             if (!fqtn.EndsWith("?") && !fqtn.StartsWith("global::System.Nullable<"))
                 fqtn += "?";
@@ -147,7 +150,7 @@ internal static class AutoImplementerGeneratorOutput
 
         copyAttributes(propertySymbol, pi, out var propertyHasRequiredAttribute);
 
-        if (implementPropertyAsRequired || propertyHasRequiredAttribute || info.ImplementAllPropertiesAsRequired)
+        if (implementPropertyAsRequired || propertyHasRequiredAttribute || (info.Strict && !nullable) )
             pi.IsRequired = true;
 
         pi.InheritXmlDoc = true;
@@ -167,7 +170,7 @@ internal static class AutoImplementerGeneratorOutput
         {
             switch (namedArgument.Key)
             {
-                case StaticAttributesGeneratorData.AutoImplementOnMembersClass_AsRequired:
+                case StaticAttributesGeneratorData.AutoImplementAttribute_AsRequired:
                     if (asRequiredAttributeIsValidOnMemberType(memberType, autoImplementAttribute, context)
                         && namedArgument.Value.Kind == TypedConstantKind.Primitive
                         && namedArgument.Value.Value is bool asRequired)
@@ -176,7 +179,7 @@ internal static class AutoImplementerGeneratorOutput
                     }
                     break;
 
-                case StaticAttributesGeneratorData.AutoImplementOnMembersClass_Implement: //this was already handled earlier
+                case StaticAttributesGeneratorData.AutoImplementAttribute_Implement: //this was already handled earlier
                 default:
                     continue;
             }
@@ -190,7 +193,7 @@ internal static class AutoImplementerGeneratorOutput
 
         var syntaxNode = autoImplementAttribute.ApplicationSyntaxReference?.GetSyntax() as Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax;
 
-        var arg = syntaxNode?.ArgumentList?.Arguments.FirstOrDefault(arg => arg.NameColon?.Name.ToString() == StaticAttributesGeneratorData.AutoImplementOnMembersClass_AsRequired);
+        var arg = syntaxNode?.ArgumentList?.Arguments.FirstOrDefault(arg => arg.NameColon?.Name.ToString() == StaticAttributesGeneratorData.AutoImplementAttribute_AsRequired);
 
         if (arg is not null)
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MemberAttributePropertyAsRequiredOnInvalidMemberType, arg.GetLocation()));
@@ -201,7 +204,7 @@ internal static class AutoImplementerGeneratorOutput
     private static AttributeData? getAutoImplementAttribute(ISymbol memberSymbol)
     {
         return memberSymbol.GetAttributes().SingleOrDefault(a =>
-                    a.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementOnMembersAttributeClassName
+                    a.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementAttributeName
                     && a.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace);
     }
 
@@ -212,7 +215,7 @@ internal static class AutoImplementerGeneratorOutput
 
         foreach (var namedArgument in autoImplementAttribute.NamedArguments)
         {
-            if (namedArgument.Key == StaticAttributesGeneratorData.AutoImplementOnMembersClass_Implement
+            if (namedArgument.Key == StaticAttributesGeneratorData.AutoImplementAttribute_Implement
                 && namedArgument.Value.Kind == TypedConstantKind.Primitive
                 && namedArgument.Value.Value is bool shouldImplement)
             {
@@ -233,14 +236,14 @@ internal static class AutoImplementerGeneratorOutput
         {
             if (attribute.AttributeClass?.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
             {
-                if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.RequiredAttributeClassName)
+                if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.RequiredAttributeName)
                 {
                     propertyHasRequiredAttribute = true;
 
                     // do not copy the basilisque internal attribute
                     continue;
                 }
-                else if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.AutoImplementOnMembersAttributeClassName)
+                else if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.AutoImplementAttributeName)
                     // do not copy the basilisque internal attribute
                     continue;
             }

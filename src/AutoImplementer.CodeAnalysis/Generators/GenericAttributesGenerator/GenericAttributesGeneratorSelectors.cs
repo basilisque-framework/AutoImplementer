@@ -22,7 +22,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGe
 
 internal static class GenericAttributesGeneratorSelectors
 {
-    private static readonly string _attributeNameWithoutSuffix = StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName.Substring(0, StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName.Length - 9);
+    private static readonly string _attributeNameWithoutSuffix = StaticAttributesGeneratorData.AutoImplementsAttributeName.Substring(0, StaticAttributesGeneratorData.AutoImplementsAttributeName.Length - 9);
 
     internal static IncrementalValuesProvider<IReadOnlyList<GenericAttributesGeneratorInfo>> GetGenericAttributesToGenerate(IncrementalGeneratorInitializationContext context)
     {
