@@ -146,7 +146,7 @@ internal static class AutoImplementerGeneratorOutput
                 fqtn += "?";
         }
 
-        var pi = new Basilisque.CodeAnalysis.Syntax.PropertyInfo(fqtn, propertySymbol.Name);
+        var pi = new PropertyInfo(fqtn, propertySymbol.Name);
 
         copyAttributes(propertySymbol, pi, out var propertyHasRequiredAttribute);
 
@@ -244,11 +244,17 @@ internal static class AutoImplementerGeneratorOutput
                     continue;
                 }
                 else if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.AutoImplementAttributeName)
+                {
+
+
                     // do not copy the basilisque internal attribute
                     continue;
+                }
+
             }
 
-            pi.Attributes.Add(new AttributeInfo(attribute.ToString()));
+            var att = attribute.ToString();
+            pi.Attributes.Add(new AttributeInfo(att));
         }
     }
 }

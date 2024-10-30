@@ -96,7 +96,7 @@ public partial class MyImplementation
 {{
     /// <inheritdoc />
     [System.ComponentModel.BrowsableAttribute(false)]
-    public int SingleAttributeWithConstructorParameter {{ get; set; }}
+    public required int SingleAttributeWithConstructorParameter {{ get; set; }}
     
     /// <inheritdoc />
     [System.ComponentModel.BrowsableAttribute(false)]

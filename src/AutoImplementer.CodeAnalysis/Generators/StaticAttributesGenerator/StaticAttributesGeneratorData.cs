@@ -28,7 +28,7 @@ public static class StaticAttributesGeneratorData
     internal const string AutoImplementableAttributeName = "AutoImplementInterfaceAttribute";
 
     internal const string AutoImplementsAttributeName        = "AutoImplementInterfacesAttribute";
-        internal const string AutoImplementsAttribute_Strict    = "RequiredDeclarationStrategy";
+        internal const string AutoImplementsAttribute_Strict    = "Strict";
 
     internal const string AutoImplementAttributeName            = "AutoImplementAttribute";
         internal const string AutoImplementAttribute_Implement      = "Implement";
