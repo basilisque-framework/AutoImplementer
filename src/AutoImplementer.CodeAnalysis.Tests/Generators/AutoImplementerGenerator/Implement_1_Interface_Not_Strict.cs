@@ -21,7 +21,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplement
 
 [TestClass]
 [TestCategory(AutoImplementerGeneratorCategory)]
-public class Implement_1_Interface_AllPropertiesAsRequired : BaseAutoImplementerGeneratorTest
+public class Implement_1_Interface_Not_Strict : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)
     {
@@ -31,44 +31,50 @@ public class Implement_1_Interface_AllPropertiesAsRequired : BaseAutoImplementer
 
 using Basilisque.AutoImplementer.Annotations;
 
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Not_Strict;
 
 /// <summary>
 /// The interface to be implemented
 /// </summary>
-[Basilisque.AutoImplementer.Annotations.AutoImplementInterface(ImplementAllPropertiesAsRequired = true)]
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterface(Strict = false)]
 public interface IMyInterface
 {
     /// <summary>
-    /// int not required
+    /// int not required because of strict disabled
     /// </summary>
-    int IntNotRequired { get; set; }
+    int NonNullableNotRequired { get; set; }
 
     /// <summary>
-    /// int required
+    /// int required because of [Required]
     /// </summary>
-    [Required] int IntRequired { get; set; }
+    [Required] int NonNullableRequiredByRequiredAttribute { get; set; }
 
     /// <summary>
-    /// string not required
+    /// nullable int not required
     /// </summary>
-    string StringNotRequired { get; set; }
+    int? NullableNotRequired { get; set; }
 
     /// <summary>
-    /// string required
+    /// nullable int required because of [Required]
     /// </summary>
-    [Required] string StringRequired { get; set; }
+    [Required] int? NullableRequiredByRequiredAttribute { get; set; }
+
+    /// <summary>
+    /// nullable int required by AutoImplementAttribute
+    /// </summary>
+    [Basilisque.AutoImplementer.Annotations.AutoImplement(AsRequired = true)]
+    int? NullableRequiredByAutoImplementAttribute { get; set; }
 }
 ");
 
         // class that implements the interface
         sources.Add(@"
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Not_Strict;
 
 /// <summary>
 /// The class implementing the interface
 /// </summary>
-[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces(typeof(IMyInterface))]
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class MyImplementation : IMyInterface
 { }
 ");
@@ -77,24 +83,27 @@ public partial class MyImplementation : IMyInterface
     protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
     {
         yield return (
-            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired.MyImplementation.auto_impl.g.cs",
+            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_Not_Strict.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_AllPropertiesAsRequired;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Not_Strict;
 
 {CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
 public partial class MyImplementation
 {{
     /// <inheritdoc />
-    public required int IntNotRequired {{ get; set; }}
+    public int NonNullableNotRequired {{ get; set; }}
     
     /// <inheritdoc />
-    public required int IntRequired {{ get; set; }}
+    public required int NonNullableRequiredByRequiredAttribute {{ get; set; }}
     
     /// <inheritdoc />
-    public required string StringNotRequired {{ get; set; }}
+    public int? NullableNotRequired {{ get; set; }}
     
     /// <inheritdoc />
-    public required string StringRequired {{ get; set; }}
+    public required int? NullableRequiredByRequiredAttribute {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required int? NullableRequiredByAutoImplementAttribute {{ get; set; }}
 }}
 
 #nullable restore");

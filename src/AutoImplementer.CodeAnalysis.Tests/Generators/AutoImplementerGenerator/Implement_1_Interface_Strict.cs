@@ -21,7 +21,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplement
 
 [TestClass]
 [TestCategory(AutoImplementerGeneratorCategory)]
-public class Implement_1_Interface_With_Skipped_Properties : BaseAutoImplementerGeneratorTest
+public class Implement_1_Interface_Strict : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)
     {
@@ -29,50 +29,52 @@ public class Implement_1_Interface_With_Skipped_Properties : BaseAutoImplementer
         sources.Add(@"
 #nullable enable
 
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Skipped_Properties;
+using Basilisque.AutoImplementer.Annotations;
+
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Strict;
 
 /// <summary>
 /// The interface to be implemented
 /// </summary>
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterface(Strict = true)]
 public interface IMyInterface
 {
     /// <summary>
-    /// Property 1
+    /// int required because of strict
     /// </summary>
-    int Property1 { get; set; }
+    int NonNullableRequiredByStrict { get; set; }
 
     /// <summary>
-    /// Property 2
+    /// int required because of [Required]
     /// </summary>
-    [Basilisque.AutoImplementer.Annotations.AutoImplement(Implement = false)]
-    int Property2 { get; set; }
+    [Required] int NonNullableRequiredByRequiredAttribute { get; set; }
 
     /// <summary>
-    /// Property 3
+    /// nullable int not required
     /// </summary>
-    string? Property3 { get; set; }
+    int? NullableNotRequired { get; set; }
 
     /// <summary>
-    /// Property 4
+    /// nullable int required because of [Required]
     /// </summary>
-    [Basilisque.AutoImplementer.Annotations.AutoImplement(Implement = true)]
-    string? Property4 { get; set; }
+    [Required] int? NullableRequiredByRequiredAttribute { get; set; }
 
     /// <summary>
-    /// Property 5
+    /// nullable int required by AutoImplementAttribute
     /// </summary>
-    string? Property5 { get; set; }
+    [Basilisque.AutoImplementer.Annotations.AutoImplement(AsRequired = true)]
+    int? NullableRequiredByAutoImplementAttribute { get; set; }
 }
 ");
 
         // class that implements the interface
         sources.Add(@"
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Skipped_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Strict;
 
 /// <summary>
 /// The class implementing the interface
 /// </summary>
-[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces(typeof(IMyInterface))]
+[Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces()]
 public partial class MyImplementation : IMyInterface
 { }
 ");
@@ -81,34 +83,30 @@ public partial class MyImplementation : IMyInterface
     protected override IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations()
     {
         yield return (
-            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Skipped_Properties.MyImplementation.auto_impl.g.cs",
+            Name: "AutoImpl.AIG.TestObjects.Implement_1_Interface_Strict.MyImplementation.auto_impl.g.cs",
             SourceText: @$"{CommonGeneratorData.GeneratedFileSharedHeaderWithNullable}
-namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Skipped_Properties;
+namespace AutoImpl.AIG.TestObjects.Implement_1_Interface_Strict;
 
 {CommonGeneratorData.GeneratedClassSharedAttributesNotIndented}
 public partial class MyImplementation
 {{
     /// <inheritdoc />
-    public required int Property1 {{ get; set; }}
+    public required int NonNullableRequiredByStrict {{ get; set; }}
     
     /// <inheritdoc />
-    public string? Property3 {{ get; set; }}
+    public required int NonNullableRequiredByRequiredAttribute {{ get; set; }}
     
     /// <inheritdoc />
-    public string? Property4 {{ get; set; }}
+    public int? NullableNotRequired {{ get; set; }}
     
     /// <inheritdoc />
-    public string? Property5 {{ get; set; }}
+    public required int? NullableRequiredByRequiredAttribute {{ get; set; }}
+    
+    /// <inheritdoc />
+    public required int? NullableRequiredByAutoImplementAttribute {{ get; set; }}
 }}
 
 #nullable restore");
-    }
-
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
-    {
-        // CS0535 - 'MyImplementation' does not implement interface member 'IMyInterface.Property2'
-        yield return DiagnosticResult.CompilerError("CS0535")
-            .WithSpan(System.IO.Path.Combine("/0/Test1.cs"), 8, 41, 8, 53);
     }
 }
 

@@ -25,7 +25,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.AutoImplementerGene
 
 internal static class AutoImplementerGeneratorSelectors
 {
-    private static readonly string _attributeNameWithoutSuffix = StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName.Substring(0, StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName.Length - 9);
+    private static readonly string _attributeNameWithoutSuffix = StaticAttributesGeneratorData.AutoImplementsAttributeName.Substring(0, StaticAttributesGeneratorData.AutoImplementsAttributeName.Length - 9);
 
     internal static IncrementalValuesProvider<AutoImplementerGeneratorInfo> GetClassesToGenerate(IncrementalGeneratorInitializationContext context)
     {
@@ -129,7 +129,7 @@ internal static class AutoImplementerGeneratorSelectors
 
         foreach (var attribute in classSymbol.GetAttributes())
         {
-            if (attribute.AttributeClass?.Name != StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName)
+            if (attribute.AttributeClass?.Name != StaticAttributesGeneratorData.AutoImplementsAttributeName)
                 continue;
 
             if (attribute.AttributeClass.ContainingNamespace.ToString() != CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
@@ -271,7 +271,7 @@ internal static class AutoImplementerGeneratorSelectors
         foreach (var interfaceSymbol in classSymbol.Interfaces)
         {
             var attributeData = interfaceSymbol.GetAttributes()
-                .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
+                .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementableAttributeName &&
                                     attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
                 .SingleOrDefault();
 
@@ -290,7 +290,7 @@ internal static class AutoImplementerGeneratorSelectors
     private static AutoImplementerGeneratorInterfaceInfo createAutoImplementerGeneratorInterfaceInfo(INamedTypeSymbol interfaceNamedTypeSymbol, bool isInBaseList)
     {
         var attributeData = interfaceNamedTypeSymbol.GetAttributes()
-            .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementInterfaceAttributeClassName &&
+            .Where(attribute => attribute.AttributeClass?.Name == StaticAttributesGeneratorData.AutoImplementableAttributeName &&
                               attribute.AttributeClass.ContainingNamespace.ToDisplayString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
             .SingleOrDefault();
 
@@ -311,9 +311,9 @@ internal static class AutoImplementerGeneratorSelectors
         {
             switch (namedArgument.Key)
             {
-                case "ImplementAllPropertiesAsRequired":
+                case StaticAttributesGeneratorData.AutoImplementsAttribute_Strict:
                     if (namedArgument.Value.Kind == TypedConstantKind.Primitive && namedArgument.Value.Value is bool isEnabledValue)
-                        result.ImplementAllPropertiesAsRequired = isEnabledValue;
+                        result.Strict = isEnabledValue;
                     break;
                 default:
                     break;

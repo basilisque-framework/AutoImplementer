@@ -23,7 +23,7 @@ namespace Basilisque.AutoImplementer.CodeAnalysis.Generators.GenericAttributesGe
 /// </summary>
 public static class GenericAttributesGeneratorData
 {
-    internal const string AutoImplementClassInterfacesAttributeGenericClassName = StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeClassName;
+    internal const string AutoImplementClassInterfacesAttributeGenericClassName = StaticAttributesGeneratorData.AutoImplementsAttributeName;
     internal const string AutoImplementClassInterfacesAttributeGenericFullName = StaticAttributesGeneratorData.AutoImplementClassInterfacesAttributeFullName;
 
     /// <summary>

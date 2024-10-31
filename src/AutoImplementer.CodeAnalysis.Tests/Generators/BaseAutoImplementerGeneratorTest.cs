@@ -20,10 +20,13 @@ using Basilisque.CodeAnalysis.TestSupport.MSTest.SourceGenerators.UnitTests.Veri
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
+
 
 public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>>
 {
