@@ -86,28 +86,31 @@ Now you're ready to [start implementing your interfaces automatically](https://g
   ```
 
 ### Property Implementation
-- Properties of interfaces will be added as auto-implemented properties
-- Either single properties or the whole interface can be marked to implement the properties as `required`.
+- By default, all non-nullable properties are implemented with the 'required' modifier
   ```csharp
   public interface IBook
   {
-    [Required] string Title { get; set; } // implements 'Title' as 'required'
+    string Title { get; set; }          // required
     
-    DateOnly PublishDate { get; set; }    // not required
+    DateOnly? PublishDate { get; set; } // not required
 
-    [AutoImplement(AsRequired = true)]    // implements 'Publisher' as 'required'
-    string Publisher { get; set; }
-  }
-
-  [AutoImplementInterface(ImplementAllPropertiesAsRequired = true)] // implements all properties of 'IMovie' as 'required'
-  public interface IMovie
-  {
-    string Title { get; set; }
-    
-    string Summary { get; set; }
+    string Publisher { get; set; }      // required
   }
   ```
-- Properties can be skipped. Then they have to be implemented manually.
+- This can be disabled by setting the 'Strict' property to 'false' in the `[AutoImplementInterface]` attribute, but it's not recommended.
+  ```csharp
+  [AutoImplementInterface(Strict = false)]
+  public interface IMovie
+  {
+    [Required] string Title { get; set; } // required
+
+    [AutoImplement(AsRequired = true)]    // required
+    TimeSpan Runtime { get; set; }
+    
+    string Summary { get; set; } // not required (unsafe!)
+  }
+  ```
+- Properties can also be skipped. Then they have to be implemented manually.
   ```csharp
   public interface IPublish
   {
