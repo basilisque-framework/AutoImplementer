@@ -18,8 +18,9 @@
 ## Overview
 This project provides functionality to automatically implement interfaces.
 
-[![NuGet Basilisque.AutoImplementer.CodeAnalysis](https://img.shields.io/badge/NuGet_Basilisque.AutoImplementer.CodeAnalysis-latest-blue.svg)](https://www.nuget.org/packages/Basilisque.AutoImplementer.CodeAnalysis)
-[![License](https://img.shields.io/badge/License-Apache%20License%202.0-red.svg)](LICENSE.txt)
+[![NuGet Basilisque.AutoImplementer.CodeAnalysis](https://img.shields.io/badge/NuGet_Basilisque.AutoImplementer.CodeAnalysis-latest-%23004880.svg?logo=nuget)](https://www.nuget.org/packages/Basilisque.AutoImplementer.CodeAnalysis)
+[![License](https://img.shields.io/badge/License-Apache%20License%202.0-%23D22128.svg?logo=apache&logoColor=%23D22128)](LICENSE.txt)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-main-%23F3702A.svg?logo=sonarcloud&logoColor=%23F3702A)](https://sonarcloud.io/project/overview?id=basilisque-framework_AutoImplementer)  
 
 ## Description
 This project contains a source generator that automatically implements interface members in classes implementing the interfaces.  
