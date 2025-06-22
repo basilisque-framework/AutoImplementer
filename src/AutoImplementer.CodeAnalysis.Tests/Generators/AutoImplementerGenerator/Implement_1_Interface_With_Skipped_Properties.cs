@@ -104,7 +104,7 @@ public partial class MyImplementation
 #nullable restore");
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         // CS0535 - 'MyImplementation' does not implement interface member 'IMyInterface.Property2'
         yield return DiagnosticResult.CompilerError("CS0535")

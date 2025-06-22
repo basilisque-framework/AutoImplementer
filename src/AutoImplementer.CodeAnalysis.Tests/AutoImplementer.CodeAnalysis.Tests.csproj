@@ -24,6 +24,6 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="LangVersion" />
 
-    <PackageReference Include="Basilisque.CodeAnalysis.TestSupport.MSTest" />
+    <PackageReference Include="Basilisque.CodeAnalysis.TestSupport" />
   </ItemGroup>
 </Project>

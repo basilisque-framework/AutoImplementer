@@ -88,7 +88,7 @@ namespace Basilisque.AutoImplementer.Annotations
 }}");
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         // 'string' is not an interface
         yield return DiagnosticResult.CompilerError("BAS_AUI_001")

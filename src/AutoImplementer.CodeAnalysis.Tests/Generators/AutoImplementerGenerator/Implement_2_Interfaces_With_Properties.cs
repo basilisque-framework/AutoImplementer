@@ -102,12 +102,12 @@ public partial class Movie
 #nullable restore");
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         // Expect warning "Non-nullable property 'Title' must contain a non-null value when exiting constructor. Consider declaring the property as nullable."
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24)
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24);
+            .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24)
+            .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24);
     }
 }
 

@@ -118,13 +118,13 @@ public partial class MyImplementation
 #nullable restore");
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         // There should be exactly one warning CS8618 stating that 'StringNotRequired' must contain a non-null value when exiting constructor.
         // The 'IntNotRequired' property doesn't raise this warning and the other two properties are marked as required.
         yield return DiagnosticResult.CompilerWarning("CS8618")
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36)
-            .WithSpan(System.IO.Path.Combine("Basilisque.AutoImplementer.CodeAnalysis", "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36);
+            .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36)
+            .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36);
     }
 }
 

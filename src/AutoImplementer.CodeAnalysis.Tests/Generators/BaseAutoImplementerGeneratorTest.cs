@@ -16,7 +16,7 @@
 
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.PolyfillsGenerator;
 using Basilisque.AutoImplementer.CodeAnalysis.Generators.StaticAttributesGenerator;
-using Basilisque.CodeAnalysis.TestSupport.MSTest.SourceGenerators.UnitTests.Verifiers;
+using Basilisque.CodeAnalysis.TestSupport.SourceGenerators.UnitTests.Verifiers;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
 
-public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>>
+public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<CodeAnalysis.AutoImplementerGenerator>>
 {
     protected const string AutoImplementerGeneratorCategory = "AutoImplementerGenerator";
     protected const string GenericAttributesGeneratorCategory = "GenericAttributesGenerator";
@@ -34,7 +34,7 @@ public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGene
 }
 
 public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator, TVerifier>
-    where TVerifier : IncrementalSourceGeneratorVerifier<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator>, new()
+    where TVerifier : IncrementalSourceGeneratorVerifier<CodeAnalysis.AutoImplementerGenerator>, new()
 { }
 
 public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
@@ -95,13 +95,13 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
                     Path.Combine("ref", "net7.0"))
             .WithPackages(ImmutableArray.Create(new Microsoft.CodeAnalysis.Testing.PackageIdentity("Microsoft.AspNetCore.App.Ref", "7.0.0")));
 #elif NET8_0
-        var refAssemblies = new ReferenceAssemblies(
+        var refAssemblies = new Microsoft.CodeAnalysis.Testing.ReferenceAssemblies(
                     "net8.0",
-                    new PackageIdentity(
+                    new Microsoft.CodeAnalysis.Testing.PackageIdentity(
                         "Microsoft.NETCore.App.Ref",
                         "8.0.0"),
                     Path.Combine("ref", "net8.0"))
-            .WithPackages([new PackageIdentity("Microsoft.AspNetCore.App.Ref", "8.0.0")]);
+            .WithPackages([new Microsoft.CodeAnalysis.Testing.PackageIdentity("Microsoft.AspNetCore.App.Ref", "8.0.0")]);
 #else
         throw new PlatformNotSupportedException("Please define reference assemblies for your platform!");
 #endif
@@ -119,11 +119,25 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
         if (LanguageVersion.HasValue)
             verifier.LanguageVersion = LanguageVersion.Value;
 
+        var assemblyNameInfo = System.Reflection.Assembly.GetAssembly(typeof(CodeAnalysis.AutoImplementerGenerator))?.GetName();
+
+        string assemblyName, version;
+        if (assemblyNameInfo is null)
+        {
+            version = "1.0.0.0";
+            assemblyName = "Basilisque.AutoImplementer.CodeAnalysis-1.0-Alpha";
+        }
+        else
+        {
+            version = assemblyNameInfo.Version?.ToString() ?? "1.0.0.0";
+            assemblyName = assemblyNameInfo.Name ?? "Basilisque.AutoImplementer.CodeAnalysis-1.0-Alpha";
+        }
+
         //set the diagnostic options
         foreach (var diagOp in GetDiagnosticOptions())
             verifier.DiagnosticOptions.Add(diagOp.key, diagOp.value);
 
-        foreach (var expDiag in GetExpectedDiagnostics())
+        foreach (var expDiag in GetExpectedDiagnostics(assemblyName, version))
             verifier.ExpectedDiagnostics.Add(expDiag);
 
         //add the sources
@@ -144,7 +158,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
         yield break;
     }
 
-    protected virtual IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected virtual IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         //we can return expected diagnostics like this:
         //yield return new Microsoft.CodeAnalysis.Testing.DiagnosticResult("CS1591", Microsoft.CodeAnalysis.DiagnosticSeverity.Error);

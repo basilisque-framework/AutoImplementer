@@ -69,7 +69,7 @@ public partial class MyImplementation_With_2_Interfaces : IMyInterface1, IMyInte
         yield break;
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         // 'string' is not an interface
         yield return DiagnosticResult.CompilerError("BAS_AUI_001")

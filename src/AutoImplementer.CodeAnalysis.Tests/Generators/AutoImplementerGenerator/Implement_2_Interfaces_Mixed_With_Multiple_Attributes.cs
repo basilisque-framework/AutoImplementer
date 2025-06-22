@@ -132,7 +132,7 @@ public partial class Movie
 #nullable restore");
     }
 
-    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics()
+    protected override IEnumerable<DiagnosticResult> GetExpectedDiagnostics(string assemblyName, string assemblyVersion)
     {
         if (_testType == TestType.Both)
             yield break;
