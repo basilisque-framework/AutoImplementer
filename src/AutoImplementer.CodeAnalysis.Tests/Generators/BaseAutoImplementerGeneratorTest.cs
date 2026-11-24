@@ -41,7 +41,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
     where TGenerator : Microsoft.CodeAnalysis.IIncrementalGenerator, new()
     where TVerifier : IncrementalSourceGeneratorVerifier<TGenerator>, new()
 {
-    public virtual Microsoft.CodeAnalysis.CSharp.LanguageVersion? LanguageVersion { get { return null; } }
+    public virtual Microsoft.CodeAnalysis.CSharp.LanguageVersion? LanguageVersion => null;
 
     [TestMethod]
     public virtual async Task Test()
@@ -134,8 +134,8 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
         }
 
         //set the diagnostic options
-        foreach (var diagOp in GetDiagnosticOptions())
-            verifier.DiagnosticOptions.Add(diagOp.key, diagOp.value);
+        foreach (var (key, value) in GetDiagnosticOptions())
+            verifier.DiagnosticOptions.Add(key, value);
 
         foreach (var expDiag in GetExpectedDiagnostics(assemblyName, version))
             verifier.ExpectedDiagnostics.Add(expDiag);

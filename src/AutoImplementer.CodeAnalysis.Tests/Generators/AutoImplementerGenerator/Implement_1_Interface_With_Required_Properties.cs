@@ -127,4 +127,3 @@ public partial class MyImplementation
             .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_1_Interface_With_Required_Properties.MyImplementation.auto_impl.g.cs"), 27, 19, 27, 36);
     }
 }
-

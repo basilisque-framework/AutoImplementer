@@ -104,8 +104,10 @@ public partial class Movie : IMovie
     public string? Title { get; set; }";
 
             if (_testType == TestType.Both)
-                expl = expl + @"
+            {
+                expl += @"
 ";
+            }
         }
 
         if (_testType == TestType.ImplicitOnly || _testType == TestType.Both)
@@ -115,8 +117,10 @@ public partial class Movie : IMovie
         }
 
         if (_testType == TestType.Both)
+        {
             space = @"    
 ";
+        }
 
         yield return (
             Name: "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_Mixed_With_Multiple_Attributes.Movie.auto_impl.g.cs",
@@ -142,4 +146,3 @@ public partial class Movie
             .WithSpan(System.IO.Path.Combine("/0/Test1.cs"), 9, 30, 9, 36);
     }
 }
-

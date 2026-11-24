@@ -29,51 +29,16 @@ internal class AutoImplementerGeneratorInfo
 
     public AccessModifier AccessModifier { get; set; }
 
-    public bool HasData
-    {
-        get
-        {
-            return HasInterfaces || HasDiagnostics;
-        }
-    }
+    public bool HasData => HasInterfaces || HasDiagnostics;
 
-    public bool HasInterfaces
-    {
-        get
-        {
-            return _interfaces?.Any() == true;
-        }
-    }
+    public bool HasInterfaces => _interfaces?.Any() == true;
 
-    public bool HasDiagnostics
-    {
-        get
-        {
-            return _diagnostics?.Any() == true;
-        }
-    }
+    public bool HasDiagnostics => _diagnostics?.Any() == true;
 
-    public Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> Interfaces
-    {
-        get
-        {
-            if (_interfaces is null)
-                _interfaces = new Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo>(SymbolEqualityComparer.Default);
+    public Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo> Interfaces => _interfaces ??=
+        new Dictionary<INamedTypeSymbol, AutoImplementerGeneratorInterfaceInfo>(SymbolEqualityComparer.Default);
 
-            return _interfaces;
-        }
-    }
-
-    public List<Diagnostic> Diagnostics
-    {
-        get
-        {
-            if (_diagnostics is null)
-                _diagnostics = new List<Diagnostic>();
-
-            return _diagnostics;
-        }
-    }
+    public List<Diagnostic> Diagnostics => _diagnostics ??= new List<Diagnostic>();
 
     public AutoImplementerGeneratorInfo(string className, string? containingNamespace, AccessModifier accessModifier)
     {

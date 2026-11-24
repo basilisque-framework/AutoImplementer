@@ -1,5 +1,27 @@
+# EditorConfig baseline: 1
+
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
+
+###### GitHub Actions and PowerShell ######
+[*.{yml,yaml,ps1,psm1,psd1}]
+charset = utf-8
+indent_style = space
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.{ps1,psm1,psd1}]
+indent_size = 4
+
+###### Markdown ######
+[*.md]
+charset = utf-8
+insert_final_newline = false
+# Two trailing spaces can represent a hard line break.
+trim_trailing_whitespace = false
 
 ###### C# & ASP.Net files ######
 [*.{cs,csx,razor,cshtml}]
@@ -18,7 +40,6 @@ indent_style = space
 tab_width = 4
 
 # New line preferences
-end_of_line = crlf
 insert_final_newline = false
 trim_trailing_whitespace = true
 
@@ -89,14 +110,14 @@ csharp_style_var_for_built_in_types = true:silent
 csharp_style_var_when_type_is_apparent = true:silent
 
 # Expression-bodied members
-csharp_style_expression_bodied_accessors = false:silent
+csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_constructors = false:suggestion
-csharp_style_expression_bodied_indexers = false:silent
+csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = false:silent
+csharp_style_expression_bodied_properties = true:silent
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
@@ -120,7 +141,7 @@ csharp_prefer_braces = when_multiline:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_prefer_method_group_conversion = true
-csharp_style_prefer_primary_constructors = true
+csharp_style_prefer_primary_constructors = false
 csharp_style_prefer_top_level_statements = false
 
 # Expression-level preferences
@@ -211,21 +232,25 @@ dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_rule.private_fields_should_be_camel_case.severity = warning
-dotnet_naming_rule.private_fields_should_be_camel_case.symbols = private_field_members
-dotnet_naming_rule.private_fields_should_be_camel_case.style = begins_with_underscore_camel_case
-
-dotnet_naming_rule.public_fields_should_be_camel_case.severity = warning
-dotnet_naming_rule.public_fields_should_be_camel_case.symbols = public_field_members
-dotnet_naming_rule.public_fields_should_be_camel_case.style = pascal_case
-
-dotnet_naming_rule.const_fields_should_be_camel_case.severity = warning
-dotnet_naming_rule.const_fields_should_be_camel_case.symbols = const_field_members
-dotnet_naming_rule.const_fields_should_be_camel_case.style = pascal_case
+dotnet_naming_rule.private_non_field_members_should_be_pascal_case.severity = warning
+dotnet_naming_rule.private_non_field_members_should_be_pascal_case.symbols = private_non_field_and_method_members
+dotnet_naming_rule.private_non_field_members_should_be_pascal_case.style = pascal_case
 
 dotnet_naming_rule.private_methods_should_be_camel_case.severity = warning
 dotnet_naming_rule.private_methods_should_be_camel_case.symbols = private_methods
 dotnet_naming_rule.private_methods_should_be_camel_case.style = camel_case
+
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = warning
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols = private_field_members
+dotnet_naming_rule.private_fields_should_be_camel_case.style = begins_with_underscore_camel_case
+
+dotnet_naming_rule.public_fields_should_be_pascal_case.severity = warning
+dotnet_naming_rule.public_fields_should_be_pascal_case.symbols = public_field_members
+dotnet_naming_rule.public_fields_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_rule.const_fields_should_be_camel_case.severity = warning
+dotnet_naming_rule.const_fields_should_be_camel_case.symbols = const_field_members
+dotnet_naming_rule.const_fields_should_be_camel_case.style = pascal_case
 
 # Symbol specifications
 
@@ -237,8 +262,16 @@ dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.types.required_modifiers = 
 
+dotnet_naming_symbols.private_non_field_and_method_members.applicable_kinds = property, event
+dotnet_naming_symbols.private_non_field_and_method_members.applicable_accessibilities = private
+dotnet_naming_symbols.private_non_field_and_method_members.required_modifiers = 
+
+dotnet_naming_symbols.private_methods.applicable_kinds = method
+dotnet_naming_symbols.private_methods.applicable_accessibilities = private
+dotnet_naming_symbols.private_methods.required_modifiers = 
+
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
-dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.required_modifiers = 
 
 dotnet_naming_symbols.const_field_members.applicable_kinds = field
@@ -252,10 +285,6 @@ dotnet_naming_symbols.private_field_members.required_modifiers =
 dotnet_naming_symbols.public_field_members.applicable_kinds = field
 dotnet_naming_symbols.public_field_members.applicable_accessibilities = public, internal, protected_internal
 dotnet_naming_symbols.public_field_members.required_modifiers = 
-
-dotnet_naming_symbols.private_methods.applicable_kinds = method
-dotnet_naming_symbols.private_methods.applicable_accessibilities = private
-dotnet_naming_symbols.private_methods.required_modifiers = 
 
 # Naming styles
 
@@ -291,6 +320,5 @@ indent_style = space
 tab_width = 2
 
 # New line preferences
-end_of_line = crlf
 insert_final_newline = false
 trim_trailing_whitespace = true

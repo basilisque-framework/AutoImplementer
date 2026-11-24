@@ -91,21 +91,14 @@ internal static class AutoImplementerGeneratorOutput
                 if (shouldIgnoreProperty(autoImplementAttribute))
                     continue;
 
-                Basilisque.CodeAnalysis.Syntax.SyntaxNode? node;
-
-                switch (member)
+                Basilisque.CodeAnalysis.Syntax.SyntaxNode? node = member switch
                 {
-                    case IPropertySymbol propertySymbol:
-                        node = implementProperty(context, propertySymbol, i.Value, autoImplementAttribute);
-                        break;
+                    IPropertySymbol propertySymbol => implementProperty(context, propertySymbol, i.Value, autoImplementAttribute),
                     //case IMethodSymbol methodSymbol:
                     //    yield return implementMethod(methodSymbol);
                     //    break;
-                    default:
-                        node = null;
-                        break;
-                }
-
+                    _ => null,
+                };
                 if (node is null)
                     continue;
 
@@ -240,8 +233,10 @@ internal static class AutoImplementerGeneratorOutput
                     continue;
                 }
                 else if (attribute.AttributeClass.Name == StaticAttributesGeneratorData.AutoImplementOnMembersAttributeClassName)
+                {
                     // do not copy the basilisque internal attribute
                     continue;
+                }
             }
 
             pi.Attributes.Add(new AttributeInfo(attribute.ToString()));

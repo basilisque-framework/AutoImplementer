@@ -51,4 +51,3 @@ namespace System.Runtime.CompilerServices
         yield break;
     }
 }
-

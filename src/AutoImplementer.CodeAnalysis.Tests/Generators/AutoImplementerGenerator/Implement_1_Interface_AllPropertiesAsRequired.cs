@@ -100,4 +100,3 @@ public partial class MyImplementation
 #nullable restore");
     }
 }
-

@@ -110,4 +110,3 @@ public partial class Movie
             .WithSpan(System.IO.Path.Combine(assemblyName, "Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator", "AutoImpl.AIG.TestObjects.Implement_2_Interfaces_With_Properties.Movie.auto_impl.g.cs"), 21, 19, 21, 24);
     }
 }
-

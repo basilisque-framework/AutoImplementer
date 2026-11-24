@@ -73,7 +73,9 @@ internal static class AutoImplementerGeneratorSelectors
 
         // without namespace like [AutoImplementInterfaces]
         if (attribute.Name is IdentifierNameSyntax ins)
+        {
             identifierNameSyntax = ins;
+        }
         // with namespace like [Basilisque.AutoImplementer.Annotations.AutoImplementInterfaces]
         else if (attribute.Name is QualifiedNameSyntax qns
             && qns.Left is QualifiedNameSyntax qnsl && qnsl.ToString() == CommonGeneratorData.AutoImplementedAttributesTargetNamespace
@@ -135,7 +137,7 @@ internal static class AutoImplementerGeneratorSelectors
             if (attribute.AttributeClass.ContainingNamespace.ToString() != CommonGeneratorData.AutoImplementedAttributesTargetNamespace)
                 continue;
 
-            classAttributes = classAttributes ?? new List<AttributeData>();
+            classAttributes ??= new List<AttributeData>();
 
             classAttributes.Add(attribute);
         }
@@ -159,7 +161,7 @@ internal static class AutoImplementerGeneratorSelectors
             else
                 continue;
 
-            autoImplementerGeneratorInfo = autoImplementerGeneratorInfo ?? createGeneratorInfo(classDeclaration);
+            autoImplementerGeneratorInfo ??= createGeneratorInfo(classDeclaration);
 
             action(classSymbol, classAttribute, autoImplementerGeneratorInfo);
         }
@@ -201,8 +203,7 @@ internal static class AutoImplementerGeneratorSelectors
         if (syntaxReference == null)
             return;
 
-        var syntaxNode = syntaxReference.GetSyntax() as AttributeSyntax;
-        if (syntaxNode == null)
+        if (syntaxReference.GetSyntax() is not AttributeSyntax syntaxNode)
             return;
 
         var argumentList = syntaxNode.ArgumentList;

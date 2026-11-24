@@ -46,4 +46,3 @@ public partial class Movie
     //    //ToDo: expect warning/info that the class is marked for auto implementation but there is nothing to implement
     //}
 }
-

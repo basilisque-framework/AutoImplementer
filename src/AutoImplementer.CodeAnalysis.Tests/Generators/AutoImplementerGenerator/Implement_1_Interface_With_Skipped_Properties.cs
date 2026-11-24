@@ -111,4 +111,3 @@ public partial class MyImplementation
             .WithSpan(System.IO.Path.Combine("/0/Test1.cs"), 8, 41, 8, 53);
     }
 }
-

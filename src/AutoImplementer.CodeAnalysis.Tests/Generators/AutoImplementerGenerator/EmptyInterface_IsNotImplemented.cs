@@ -59,4 +59,3 @@ public partial class MyImplementation : IMyInterface
         yield break;
     }
 }
-

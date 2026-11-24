@@ -122,4 +122,3 @@ public partial class Movie : global::AutoImpl.AIG.TestObjects.Implement_2_Interf
 #nullable restore");
     }
 }
-

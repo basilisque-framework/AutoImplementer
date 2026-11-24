@@ -126,4 +126,3 @@ namespace Basilisque.AutoImplementer.Annotations
 }}");
     }
 }
-
