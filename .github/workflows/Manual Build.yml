@@ -36,7 +36,7 @@ jobs:
     uses: basilisque-framework/CommonBuild-GitHubActions/.github/workflows/Common-Build.yml@v1.0
     with:
       basBuildType: ${{ inputs.basBuildTypeChoice }}
-      projectOrSolution: 'src/Basilisque.AutoImplementer.sln'
+      projectOrSolution: 'src/Basilisque.AutoImplementer.slnx'
       dotNetVersion: |
         8.0.x
         11.0.x
