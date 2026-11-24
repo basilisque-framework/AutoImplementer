@@ -19,8 +19,8 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.GenericAttributesGenerator;
 
-[TestClass]
-[TestCategory(GenericAttributesGeneratorCategory)]
+[Category(GenericAttributesGeneratorCategory)]
+[InheritsTests]
 public class GenericClassAttributes_Detection_NoSuffix_WithNamespace : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

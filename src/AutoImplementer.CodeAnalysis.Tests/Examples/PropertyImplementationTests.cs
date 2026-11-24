@@ -83,12 +83,11 @@ public partial class Song : ITitle
     The tests themselves obviously don't provide much value. When the project compiles successfully, the source generator did it's work.
 */
 
-[TestClass]
-[TestCategory("Examples")]
+[Category("Examples")]
 public partial class PropertyImplementationTests
 {
-    [TestMethod]
-    public void Ensure_Properties_of_Book_are_working_fine()
+    [Test]
+    public async Task Ensure_Properties_of_Book_are_working_fine()
     {
         const string TITLE = "Title";
         const string SUMMARY = "This is the summary";
@@ -100,13 +99,13 @@ public partial class PropertyImplementationTests
             Image = null
         };
 
-        Assert.AreEqual(TITLE, book.Title);
-        Assert.AreEqual(SUMMARY, book.Summary);
-        Assert.IsNull(book.Image);
+        await Assert.That(book.Title).IsEqualTo(TITLE);
+        await Assert.That(book.Summary).IsEqualTo(SUMMARY);
+        await Assert.That(book.Image).IsNull();
     }
 
-    [TestMethod]
-    public void Ensure_Properties_of_Movie_are_working_fine()
+    [Test]
+    public async Task Ensure_Properties_of_Movie_are_working_fine()
     {
         const string TITLE = "Title";
         const string SUMMARY = "This is the summary";
@@ -118,13 +117,13 @@ public partial class PropertyImplementationTests
             Image = null
         };
 
-        Assert.AreEqual(TITLE, book.Title);
-        Assert.AreEqual(SUMMARY, book.Summary);
-        Assert.IsNull(book.Image);
+        await Assert.That(book.Title).IsEqualTo(TITLE);
+        await Assert.That(book.Summary).IsEqualTo(SUMMARY);
+        await Assert.That(book.Image).IsNull();
     }
 
-    [TestMethod]
-    public void Ensure_Properties_of_Song_are_working_fine()
+    [Test]
+    public async Task Ensure_Properties_of_Song_are_working_fine()
     {
         const string TITLE = "Title";
 
@@ -133,6 +132,6 @@ public partial class PropertyImplementationTests
             Title = TITLE
         };
 
-        Assert.AreEqual(TITLE, book.Title);
+        await Assert.That(book.Title).IsEqualTo(TITLE);
     }
 }

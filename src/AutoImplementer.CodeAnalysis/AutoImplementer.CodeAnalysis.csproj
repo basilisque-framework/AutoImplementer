@@ -17,6 +17,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <BAS_CA_Pack_TargetProject_MSBuild_Files>false</BAS_CA_Pack_TargetProject_MSBuild_Files>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,8 @@
 
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
+
+    <SonarQubeSetting Include="sonar.cs.vscoveragexml.reportsPaths" Value="**/artifacts/test/**/coverage.xml" />
 
     <!-- Pack README -->
     <None Include="..\..\README.md" Pack="true" PackagePath="docs" />

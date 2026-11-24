@@ -18,8 +18,8 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
-[TestClass]
-[TestCategory(AutoImplementerGeneratorCategory)]
+[Category(AutoImplementerGeneratorCategory)]
+[InheritsTests]
 public class Diagnostics_BAS_AUI_001_InvalidConstructorArgumentType : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

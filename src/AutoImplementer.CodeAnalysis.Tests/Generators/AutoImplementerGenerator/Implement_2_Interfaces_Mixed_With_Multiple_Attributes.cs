@@ -19,8 +19,11 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
-[TestClass]
-[TestCategory(AutoImplementerGeneratorCategory)]
+[Category(AutoImplementerGeneratorCategory)]
+[InheritsTests]
+[Arguments(TestType.ExplicitOnly)]
+[Arguments(TestType.ImplicitOnly)]
+[Arguments(TestType.Both)]
 public class Implement_2_Interfaces_Mixed_With_Multiple_Attributes : BaseAutoImplementerGeneratorTest
 {
     public enum TestType
@@ -30,17 +33,11 @@ public class Implement_2_Interfaces_Mixed_With_Multiple_Attributes : BaseAutoImp
         Both
     }
 
-    private TestType _testType;
+    private readonly TestType _testType;
 
-    [DataTestMethod]
-    [DataRow(TestType.ExplicitOnly)]
-    [DataRow(TestType.ImplicitOnly)]
-    [DataRow(TestType.Both)]
-    public Task Test(TestType testType)
+    public Implement_2_Interfaces_Mixed_With_Multiple_Attributes(TestType testType)
     {
         _testType = testType;
-
-        return base.Test();
     }
 
     protected override void AddSourcesUnderTest(SourceFileList sources)

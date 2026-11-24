@@ -19,8 +19,8 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.GenericAttributesGenerator;
 
-[TestClass]
-[TestCategory(GenericAttributesGeneratorCategory)]
+[Category(GenericAttributesGeneratorCategory)]
+[InheritsTests]
 public class GenericClassAttributes_GenerateMultipleAttributes : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

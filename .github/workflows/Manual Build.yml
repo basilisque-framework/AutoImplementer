@@ -33,11 +33,17 @@ on:
 
 jobs:
   call-build:
-    uses: basilisque-framework/CommonBuild/.github/workflows/Common-Build.yml@release/v1.0
+    uses: basilisque-framework/CommonBuild-GitHubActions/.github/workflows/Common-Build.yml@v1.0
     with:
       basBuildType: ${{ inputs.basBuildTypeChoice }}
-      dotNetVersion: '11.0.x'
+      projectOrSolution: 'src/Basilisque.AutoImplementer.sln'
+      dotNetVersion: |
+        8.0.x
+        11.0.x
+      versioningProjectName: 'AutoImplementer.CodeAnalysis'
+      runDotnetPublish: true
       publishTargetFramework: 'netstandard2.0'
+      runDotnetPack: true
       sonarProjectKey: 'basilisque-framework_AutoImplementer'
       sonarOrganization: 'basilisque-framework'
     secrets: inherit

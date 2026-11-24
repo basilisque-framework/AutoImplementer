@@ -25,6 +25,7 @@ using System.Text;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators;
 
+[InheritsTests]
 public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGeneratorTest<IncrementalSourceGeneratorVerifier<CodeAnalysis.AutoImplementerGenerator>>
 {
     protected const string AutoImplementerGeneratorCategory = "AutoImplementerGenerator";
@@ -33,6 +34,7 @@ public abstract class BaseAutoImplementerGeneratorTest : BaseAutoImplementerGene
     protected const string StaticAttributesGeneratorCategory = "StaticAttributesGenerator";
 }
 
+[InheritsTests]
 public abstract class BaseAutoImplementerGeneratorTest<TVerifier> : BaseAutoImplementerGeneratorTest<Basilisque.AutoImplementer.CodeAnalysis.AutoImplementerGenerator, TVerifier>
     where TVerifier : IncrementalSourceGeneratorVerifier<CodeAnalysis.AutoImplementerGenerator>, new()
 { }
@@ -43,7 +45,7 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
 {
     public virtual Microsoft.CodeAnalysis.CSharp.LanguageVersion? LanguageVersion => null;
 
-    [TestMethod]
+    [Test]
     public virtual async Task Test()
     {
         var verifier = GetVerifier();

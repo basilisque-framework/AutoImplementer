@@ -18,8 +18,8 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.StaticAttributesGenerator;
 
-[TestClass]
-[TestCategory(StaticAttributesGeneratorCategory)]
+[Category(StaticAttributesGeneratorCategory)]
+[InheritsTests]
 public class NoAutoImplementations_StillGeneratesStaticOutput : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

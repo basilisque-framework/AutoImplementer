@@ -19,8 +19,8 @@ using Microsoft.CodeAnalysis.Testing;
 
 namespace Basilisque.AutoImplementer.CodeAnalysis.Tests.Generators.AutoImplementerGenerator;
 
-[TestClass]
-[TestCategory(AutoImplementerGeneratorCategory)]
+[Category(AutoImplementerGeneratorCategory)]
+[InheritsTests]
 public class Implement_1_Interface_With_Property_Attributes : BaseAutoImplementerGeneratorTest
 {
     protected override void AddSourcesUnderTest(SourceFileList sources)

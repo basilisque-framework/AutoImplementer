@@ -32,11 +32,10 @@ public partial class RequiredPropertiesImpl : IRequiredPropertiesExample
 { }
 
 
-[TestClass]
-[TestCategory("Examples")]
+[Category("Examples")]
 public partial class RequiredPropertyTests
 {
-    [TestMethod]
+    [Test]
     public void TestRequiredProperty()
     {
         var _ = new RequiredPropertiesImpl()

@@ -1,0 +1,8 @@
+{
+  "codeCoverage": {
+    "Configuration": {
+      "Format": "xml",
+      "CoverageFileName": "coverage.xml"
+    }
+  }
+}
