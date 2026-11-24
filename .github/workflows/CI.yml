@@ -33,6 +33,7 @@ jobs:
     uses: basilisque-framework/CommonBuild/.github/workflows/Common-Build.yml@release/v1.0
     with:
       basBuildType: 'CI'
+      dotNetVersion: '11.0.x'
       publishTargetFramework: 'netstandard2.0'
       sonarProjectKey: 'basilisque-framework_AutoImplementer'
       sonarOrganization: 'basilisque-framework'

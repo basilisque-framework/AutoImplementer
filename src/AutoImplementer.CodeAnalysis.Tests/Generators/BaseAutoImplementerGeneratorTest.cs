@@ -48,18 +48,27 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
     {
         var verifier = GetVerifier();
 
-        var expectedSources = getExpectedSources();
-        foreach (var expectedSource in expectedSources)
-        {
-            var name = expectedSource.Name;
+#if NET11_0
+        const SourceHashAlgorithm sourceOutputChecksum = SourceHashAlgorithm.Sha256;
+#else
+        const SourceHashAlgorithm sourceOutputChecksum = SourceHashAlgorithm.Sha1;
+#endif
 
-            if (!name.EndsWith(".cs"))
-                name = $"{name}.cs";
-
-            verifier.TestState.GeneratedSources.Add((typeof(TGenerator), name, SourceText.From(expectedSource.SourceText, Encoding.UTF8)));
-        }
+        // Roslyn uses SHA-1 for the attributes emitted during post-initialization.
+        addExpectedSources(verifier, GetExpectedAttributeSources(StaticAttributesGeneratorData.SupportedAttributes), SourceHashAlgorithm.Sha1);
+        addExpectedSources(verifier, GetExpectedPolyfillSources(PolyfillsGeneratorData.SupportedPolyfills), sourceOutputChecksum);
+        addExpectedSources(verifier, GetExpectedInterfaceImplementations(), sourceOutputChecksum);
 
         await verifier.RunAsync();
+    }
+
+    private static void addExpectedSources(TVerifier verifier, IEnumerable<(string Name, string SourceText)> sources, SourceHashAlgorithm checksum)
+    {
+        foreach (var (fileName, sourceText) in sources)
+        {
+            var name = fileName.EndsWith(".cs") ? fileName : $"{fileName}.cs";
+            verifier.TestState.GeneratedSources.Add((typeof(TGenerator), name, SourceText.From(sourceText, Encoding.UTF8, checksum)));
+        }
     }
 
     protected virtual TVerifier GetVerifier()
@@ -102,6 +111,12 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
                         "8.0.0"),
                     Path.Combine("ref", "net8.0"))
             .WithPackages([new Microsoft.CodeAnalysis.Testing.PackageIdentity("Microsoft.AspNetCore.App.Ref", "8.0.0")]);
+#elif NET11_0
+        var refAssemblies = new ReferenceAssemblies(
+            "net11.0",
+            new PackageIdentity("Microsoft.NETCore.App.Ref", "11.0.0"),
+            Path.Combine("ref", "net11.0"))
+            .WithPackages([new PackageIdentity("Microsoft.AspNetCore.App.Ref", "11.0.0")]);
 #else
         throw new PlatformNotSupportedException("Please define reference assemblies for your platform!");
 #endif
@@ -179,21 +194,4 @@ public abstract class BaseAutoImplementerGeneratorTest<TGenerator, TVerifier>
     }
 
     protected abstract IEnumerable<(string Name, string SourceText)> GetExpectedInterfaceImplementations();
-
-    private List<(string Name, string SourceText)> getExpectedSources()
-    {
-        var result = new List<(string Name, string SourceText)>();
-
-        addStaticSources(result);
-
-        result.AddRange(GetExpectedInterfaceImplementations());
-
-        return result;
-    }
-
-    private void addStaticSources(List<(string Name, string SourceText)> sources)
-    {
-        sources.AddRange(GetExpectedAttributeSources(StaticAttributesGeneratorData.SupportedAttributes));
-        sources.AddRange(GetExpectedPolyfillSources(PolyfillsGeneratorData.SupportedPolyfills));
-    }
 }

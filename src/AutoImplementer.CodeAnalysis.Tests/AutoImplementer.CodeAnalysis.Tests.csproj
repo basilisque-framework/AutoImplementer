@@ -17,7 +17,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsPublishable>false</IsPublishable>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net11.0</TargetFrameworks>
 
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net48</TargetFrameworks>
   </PropertyGroup>
@@ -25,5 +25,7 @@
     <CompilerVisibleProperty Include="LangVersion" />
 
     <PackageReference Include="Basilisque.CodeAnalysis.TestSupport" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Condition="'$(TargetFramework)' != 'net48'" />
   </ItemGroup>
 </Project>
